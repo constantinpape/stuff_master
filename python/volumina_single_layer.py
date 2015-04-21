@@ -15,7 +15,6 @@ if __name__ == '__main__':
 	args = parser.parse_args()
 	
 	d = vigra.readHDF5( args.path_data[0], args.key[0] )
-	#gt = vigra.readHDF5(gtpath, gtkey)
 
 	app = QApplication (sys.argv)
 	from volumina.api import Viewer
@@ -24,8 +23,5 @@ if __name__ == '__main__':
 	v.title = " Volumina Demo "
 	v.showMaximized ()
 	v.addGrayscaleLayer (d , name =" raw data ")
-	#v.addRandomColorsLayer(gt, "rcl")
 	
 	app . exec_ ()
-
-
