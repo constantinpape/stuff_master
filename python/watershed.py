@@ -25,3 +25,7 @@ def watershed_superpixel_vigra(probs):
 	seg_ws = vigra.analysis.labelImage(seg_ws)
 	
 	return seg_ws 
+
+def watershed_supervoxel_vigra(probs):
+	pass
+
