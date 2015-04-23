@@ -1,9 +1,20 @@
 #include <boost/python.hpp>
-#include "utilities.hxx"
+#include "utilities.hpp"
+#include <iostream>
 
 using namespace boost::python;
 
-BOOST_PYTHON_MODULE(utilities)
+void blob()
 {
-	def("variation_of_information", variation_of_information)
+	std::cout << "BLOB" << std::endl;
+} 
+
+BOOST_PYTHON_MODULE(blub)
+{
+	def("blob", blob);
 }
+
+//BOOST_PYTHON_MODULE(utilities)
+//{
+//	def("variation_of_information", variation_of_information);
+//}

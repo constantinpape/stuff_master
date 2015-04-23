@@ -7,7 +7,7 @@ from PyQt4 . QtCore import QTimer ; from PyQt4 . QtGui import QApplication
 
 from slic import slic_superpixel
 from slic import slic_superpixel_vigra
-from watershed import watershed_superpixel_vigra
+from watershed import watershed_superpixel_vigra, watershed_supervoxel_vigra
 
 def view(image):
 	plot.figure()
@@ -35,10 +35,12 @@ if __name__ == '__main__':
 	# use superpixel algorithm to segment the image
 	# stack 2d segmented images 
 	segmentation = np.zeros( (probs.shape[0], probs.shape[1], probs.shape[2]) ) 
-	for layer in range(probs.shape[2]):
+	#for layer in range(probs.shape[2]):
 		#segmentation[:,:,layer] = slic_superpixel(probs[:,:,layer,0], raw[0], 100, 1, True, False)
-		segmentation[:,:,layer] = watershed_superpixel_vigra(probs[:,:,layer,0])
+		#segmentation[:,:,layer] = watershed_superpixel_vigra(probs[:,:,layer,0])
 		#segmentation[:,:,layer] = slic_superpixel_vigra(probs[:,:,layer,0])
+	
+	segmentation = watershed_supervoxel_vigra(probs[:,:,:,0])
 	
 	#view(segmentation)
 	view_overlay(probs, segmentation)
@@ -46,4 +48,4 @@ if __name__ == '__main__':
 	#file = "slic"
 	#file = "slic_vigra"
 	file = "watershed_vigra"
-	np.save(path + file,segmentation)
+	#np.save(path + file,segmentation)

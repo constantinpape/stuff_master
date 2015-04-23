@@ -27,5 +27,13 @@ def watershed_superpixel_vigra(probs):
 	return seg_ws 
 
 def watershed_supervoxel_vigra(probs):
-	pass
+	# compute seeds
+	sm_probs = np.abs( probs - 0.5*( np.max(probs) - np.min(probs) ) )
+	sm_probs = sm_probs.astype(np.float32)
+	seeds = vigra.analysis.extendedLocalMinima3D(sm_probs, neigborhood = 26)
+	SEEDS = vigra.analysis.labelVolumeWithBackground(SEEDS)
+	SEEDS = SEEDS.astype(np.uint32)
+	seg_ws, maxRegionLabel = vigra.analysis.watersheds(probs,
+						neighborhood = 6, seeds = SEEDS)
+	return seg_ws
 
