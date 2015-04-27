@@ -9,7 +9,7 @@ void blob()
 	std::cout << "BLOB" << std::endl;
 } 
 
-BOOST_PYTHON_MODULE(blub)
+BOOST_PYTHON_MODULE(mypybindings)
 {
 	def("blob", blob);
 }
