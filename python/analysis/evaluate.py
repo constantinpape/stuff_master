@@ -1,7 +1,6 @@
 import sys , h5py
 import numpy as np
 import argparse
-import tifffile as tiff
 import pylab as plot
 import vigra
 from sklearn.metrics import adjusted_rand_score
@@ -90,8 +89,8 @@ if __name__ == '__main__':
 
 	args = parser.parse_args()
 
-	labels_exp_membrane = tiff.imread(args.path_exp_memb[0])
-	labels_exp_mito = tiff.imread(args.path_exp_mito[0])
+	labels_exp_membrane = vigra.impex.readImage(args.path_exp_memb[0])
+	labels_exp_mito = vigra.impex.readImgage((args.path_exp_mito[0])
 
 	labels_exp_membrane = process_labels_expected(labels_exp_membrane)
 	labels_exp_mito = process_labels_expected(labels_exp_mito)
