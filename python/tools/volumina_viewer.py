@@ -13,7 +13,7 @@ def volumina_single_layer(data):
 	v = Viewer ()
 	v.title = " Volumina Demo "
 	v.showMaximized ()
-	v.addGrayscaleLayer (d , name =" raw data ")
+	v.addGrayscaleLayer (data , name =" raw data ")
 	
 	app . exec_ ()
 

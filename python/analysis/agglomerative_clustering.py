@@ -1,7 +1,7 @@
 from vigra import numpy as np
 import vigra
-from superpix import view_overlay
 from IPython import embed
+from volumina_viewer import volumina_n_layer
 
 # get a segmentation of the superpixel segmentation via agglomerative clustering
 # based on vigranumpy/examples/graph_agglomerative clustering
@@ -29,10 +29,22 @@ def agglomerative_clustering_2d(img, labels):
 
 	# agglomerative clustering
 	beta = 0.5
-	nodeNumStop = 50
-	return vigra.graphs.agglomerativeClustering(graph = rag, edgeWeights = edgeWeights,
-							beta = beta, nodeFeatures = nodeFeatures,
-							nodeNumStop = nodeNumStop)
+	nodeNumStop = 15
+	clustering = vigra.graphs.agglomerativeClustering(graph = rag, edgeWeights = edgeWeights,
+					beta = beta, nodeFeatures = nodeFeatures,
+					nodeNumStop = nodeNumStop)
+
+	print clustering.shape
+	print np.unique(labels).shape
+	print clustering
+	print np.min(labels)
+	
+	res = np.zeros( labels.shape )
+
+	for c in range(len(clustering)):
+		res[ np.where( labels== (c-1) ) ] = clustering[c]
+
+	return res
 	
 if __name__ == '__main__':
 	path_seg = "/home/constantin/Work/data_ssd/data_080515/pedunculus/superpixel/"	
@@ -52,3 +64,7 @@ if __name__ == '__main__':
 	seg = vigra.Image(seg_vol[:,:,0])
 	
 	res = agglomerative_clustering_2d( img, seg )
+
+	res = vigra.Image(res)
+	
+	volumina_n_layer( (img, seg, res) )
