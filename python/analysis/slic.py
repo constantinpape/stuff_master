@@ -91,7 +91,9 @@ def slic_supervoxel(probabilities, raw, k, m, aniso, use_prob = True, use_raw = 
 	# co
 
 # compute SLIC supepixels with vigra. Adapted from superpixel/slic/vigra/slic_vigr.py.
-def slic_superpixel_vigra(probs, slic_weight, diameter):
+# @ param: probs: array w/ image to be segmented
+# @ param: offset, labeloffset for the segmentation, in case a stack of images is segmented, default 0
+def slic_superpixel_vigra(probs, slic_weight, diameter, offset = 0):
 	# in nikos script the superpixel are calculated on the gaussian gradient magnitude - WHY?
 	# calculate the gradient via 1st derivative of gaussian filter
 	# ggm = vigra.filters.gaussianGradientMagnitude(probs, 1.)
@@ -99,5 +101,10 @@ def slic_superpixel_vigra(probs, slic_weight, diameter):
 	# calculate the SLIC supepixels
 	seg, maxlab = vigra.analysis.slicSuperpixels( probs.astype(np.float32), slic_weight, diameter)
 	seg	    = vigra.analysis.labelImage( seg )
+	
+	# if we have an offset, add it to the array
+	if offset != 0:
+		seg += offset * np.ones( seg.shape )
+	
 	return seg
 	
