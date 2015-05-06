@@ -7,7 +7,9 @@ def watershed_superpixel():
 
 # perform the watershed algorithm implemented in vigra
 # Adapted from superpixel/watershed/ws.py
-def watershed_superpixel_vigra(probs):
+# @ param: probs: array w/ image to be segmented
+# @ param: offset, labeloffset for the segmentation, in case a stack of images is segmented, default 0
+def watershed_superpixel_vigra(probs, offset = 0):
 	# in nikos script: substract the mean and take the abs value
 	# TODO why should we do this ???
 	#hmap = np.abs( probs - bp.mean(probs) )
@@ -22,10 +24,18 @@ def watershed_superpixel_vigra(probs):
 	# apply the watershed algorithm
 	seg_ws, maxRegionLabel = vigra.analysis.watersheds(hmap,
 					neighborhood = 8, seeds = SEEDS.astype(np.uint32) )
+	# find connected components
 	seg_ws = vigra.analysis.labelImage(seg_ws)
+
+	# if we have an offset, add it to the array
+	if offset != 0:
+		seg_ws += offset * np.ones( seg_ws.shape )
 	
 	return seg_ws 
 
+# perform the watershed algorithm implemented in vigra
+# Adapted from superpixel/watershed/ws.py
+# @ param: probs: array w/ volume to be segmented
 def watershed_supervoxel_vigra(probs):
 
 	# compute seeds
