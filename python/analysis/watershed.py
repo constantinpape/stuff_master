@@ -10,7 +10,6 @@ def watershed_superpixel():
 def watershed_superpixel_vigra(probs):
 	# in nikos script: substract the mean and take the abs value
 	# TODO why should we do this ???
-	hmap = probs
 	#hmap = np.abs( probs - bp.mean(probs) )
 
 	# smooth the hmap
@@ -21,7 +20,7 @@ def watershed_superpixel_vigra(probs):
 	SEEDS = vigra.analysis.labelImageWithBackground(seeds)
 	
 	# apply the watershed algorithm
-	seg_ws, maxRegionLabel = vigra.analysis.watersheds(hmap_smooth,
+	seg_ws, maxRegionLabel = vigra.analysis.watersheds(hmap,
 					neighborhood = 8, seeds = SEEDS.astype(np.uint32) )
 	seg_ws = vigra.analysis.labelImage(seg_ws)
 	
@@ -40,7 +39,6 @@ def watershed_supervoxel_vigra(probs):
 	
 	hessian = vigra.filters.hessianOfGaussian(probs, sigma = 2)
 	hessian_ev = vigra.filters.tensorEigenvalues( hessian )
-	print hessian_ev.shape
 	
 	#plot.figure()
     	#plot.imshow(hessian_ev[:,:,25,0])
@@ -63,8 +61,8 @@ def watershed_supervoxel_vigra(probs):
     	#plot.imshow( hessian_ev_weighted[:,:,25] )
 	#plot.colorbar()
 	#plot.show()
-	
-	seeds = vigra.analysis.extendedLocalMinima3D(sm_probs, neighborhood = 26)
+
+	seeds = vigra.analysis.extendedLocalMinima3D(sm_probs + hessian_ev[:,:,:,2], neighborhood = 26)
 	SEEDS = vigra.analysis.labelVolumeWithBackground(seeds)
 	SEEDS = SEEDS.astype(np.uint32)
 	

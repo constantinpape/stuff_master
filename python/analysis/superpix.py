@@ -10,8 +10,8 @@ from volumina_viewer import volumina_single_layer
 
 
 if __name__ == '__main__':
-	path_probs = "/home/constantin/Work/data_ssd/data_090515/2x2x2nm/data_sub_combined_Probabilities.h5"
-	key_probs  = "exported_data"
+	path_probs = "/home/constantin/Work/data_ssd/data_090515/2x2x2nm/data_sub_combined_Probabilities_sliced.h5"
+	key_probs  = "data"
 	
 	probs 	= vigra.readHDF5(path_probs, key_probs)
 	
@@ -27,7 +27,7 @@ if __name__ == '__main__':
 	
 	#volumina_single_layer(probs)
 	
-	path = "/home/constantin/Work/data_ssd/data_090515/2x2x2nm/superpixel/"	
+	path = "/home/constantin/Work/data_ssd/data_090515/2x2x2nm/superpixel/sliced_"	
 	#name = "slic"
 	#name = "slic_vigra"
 	#name = "watershed_vigra"
