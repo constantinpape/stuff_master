@@ -22,30 +22,33 @@ def slicingToString(slicing):
 # the new file should already exist and have the labels added, but not drawn (if drawn they will be deleted)
 
 def transfer(labelfile, new_project_filepath):
-	labelimage = vigra.readHDF5(labelfile, "labels")
-	labelimage = np.expand_dims( labelimage, axis = 3)
-	#labelbinary = (labelimage>0).astype(np.uint8)
-	
-	with h5py.File(new_project_filepath, 'a') as project_file:
-		if 'PixelClassification/LabelSets' in project_file:
-			# start from scratch: delete all previous labels
-			del project_file['PixelClassification/LabelSets']
-		labelset_group = project_file.create_group('PixelClassification/LabelSets')
-		
-		print "big block shape", labelimage.shape
-		label_group_name = 'labels000'
-		label_group = labelset_group.create_group(label_group_name)
-		dataset = label_group.create_dataset( "block0000", data = labelimage)
-		print dataset.shape
-		
-		slicing = [slice(0, stop) for stop in dataset.shape]
-		print slicing, slicingToString(slicing), np.sum(dataset)
-		dataset.attrs["blockSlice"] = slicingToString(slicing)
+    labelimage = vigra.readHDF5(labelfile, "labels")
+    if len(labelimage.shape) != 4:
+        labelimage = np.expand_dims( labelimage, axis = 3)
+    #labelbinary = (labelimage>0).astype(np.uint8)
 
-		
+    with h5py.File(new_project_filepath, 'a') as project_file:
+    	if 'PixelClassification/LabelSets' in project_file:
+    		# start from scratch: delete all previous labels
+    		del project_file['PixelClassification/LabelSets']
+    	labelset_group = project_file.create_group('PixelClassification/LabelSets')
+
+    	print "big block shape", labelimage.shape
+    	label_group_name = 'labels000'
+    	label_group = labelset_group.create_group(label_group_name)
+    	dataset = label_group.create_dataset( "block0000", data = labelimage)
+    	print dataset.shape
+
+    	slicing = [slice(0, stop) for stop in dataset.shape]
+    	print slicing, slicingToString(slicing), np.sum(dataset)
+    	dataset.attrs["blockSlice"] = slicingToString(slicing)
+
 
 if __name__ == '__main__':
-	labelfile = "/home/constantin/Work/data_ssd/data_090515/2x2x2nm/data_sub_labels.h5" 
-	new_project_file = "/home/constantin/Work/data_ssd/data_090515/2x2x2nm/MyProject_multichannel.ilp"
-	
-	transfer(labelfile, new_project_file)
+    #labelfile        = "/home/constantin/Work/data_ssd/data_090515/2x2x2nm/data_sub_labels.h5"
+    #new_project_file = "/home/constantin/Work/data_ssd/data_090515/2x2x2nm/MyProject_multichannel.ilp"
+
+    labelfile        = "/home/constantin/Work/data_ssd/data_080515/pedunculus/2label_label.h5"
+    new_project_file = "/home/constantin/Work/data_ssd/data_080515/pedunculus/labeling_combined.ilp"
+
+    transfer(labelfile, new_project_file)
