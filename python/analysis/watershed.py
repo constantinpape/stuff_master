@@ -3,6 +3,7 @@ import numpy as np
 import matplotlib.pyplot as plot
 from volumina_viewer import volumina_single_layer
 from volumina_viewer import volumina_double_layer
+from volumina_viewer import volumina_n_layer
 
 def watershed_superpixel():
 	pass
@@ -17,15 +18,38 @@ def watershed_superpixel_vigra(probs, offset = 0):
     hmap = probs
 
     # smooth the hmap
-    hmap_smooth = vigra.gaussianSmoothing(hmap, 3.5)
-    #volumina_single_layer(hmap_smooth)
+    hmap_smooth = vigra.gaussianSmoothing(hmap, 2.5)
+
+    # Hessian of Gaussian
+    hessian = vigra.filters.hessianOfGaussian(hmap, sigma = 2)
+    hessian_ev = vigra.filters.tensorEigenvalues( hessian )
+
+    # combine the filters
+    h_ev0 = hessian_ev[:,:,0]
+    h_ev1 = hessian_ev[:,:,1]
+    combination = 2*np.absolute( h_ev0 ) +3*np.absolute( h_ev1 ) + hmap_smooth
+
+    # construct a line filter (cf. https://www.spl.harvard.edu/archive/spl-pre2007/pages/papers/yoshi/node3.html)
+    #a_0 = 0.5
+    #a_1 = 2.0
+    #line_filter =  np.multiply( (h_ev0 <= 0), np.exp( - np.divide( np.square(h_ev0), 2*np.square(a_0*h_ev1) ) ) )
+    #line_filter += np.multiply( (h_ev0  > 0), np.exp( - np.divide( np.square(h_ev0), 2*np.square(a_1*h_ev1) ) ) )
+
+    #volumina_n_layer( [ probs,
+    #    np.absolute(hessian_ev[:,:,0]),
+    #    np.absolute(hessian_ev[:,:,1]),
+    #    combination,
+    #    line_filter ] )
+    #quit()
+
+
     # find the local minima
-    seeds = vigra.analysis.extendedLocalMinima(hmap_smooth, neighborhood = 8)
+    seeds = vigra.analysis.extendedLocalMinima(combination, neighborhood = 8)
     # find the connected components in the minima and use them as seeds
     SEEDS = vigra.analysis.labelImageWithBackground(seeds)
 
     # apply the watershed algorithm
-    seg_ws, maxRegionLabel = vigra.analysis.watersheds(probs,
+    seg_ws, maxRegionLabel = vigra.analysis.watersheds(combination,
     				neighborhood = 8, seeds = SEEDS.astype(np.uint32) )
     # find connected components
     seg_ws = vigra.analysis.labelImage(seg_ws)
@@ -47,22 +71,25 @@ def watershed_supervoxel_vigra(probs):
     # try different filter for computing the best seeds (= minima)
     # best options so far:
     # for isotropic data (2x2x2 nm): Gaussian Smoothing with sigma = 4.5
-    # for anisotropic data: Gaussian Smoothing with sigma = 3.2
+    # for anisotropic data: Gaussian Smoothing with sigma = 2
 
     #sm_probs = np.array(np.abs( probs - 0.5*( np.max(probs) - np.min(probs) ) ), dtype = np.float32 )
     # Gaussian smoothing
-    sm_probs = vigra.gaussianSmoothing(probs, 1.5)
-    volumina_single_layer(sm_probs)
+    sm_probs = vigra.gaussianSmoothing(probs, (2.5,2.5,0.5) )
+
+    hessian = vigra.filters.hessianOfGaussian(probs, sigma = (2.5,2.5,0.5) )
+    hessian_ev = vigra.filters.tensorEigenvalues( hessian )
+
+    print hessian_ev.shape
+    volumina_n_layer( [ probs,
+        np.absolute(hessian_ev[:,:,:,0]),
+        np.absolute(hessian_ev[:,:,:,1]),
+        np.absolute(hessian_ev[:,:,:,2]) ] )
+    quit()
 
     # Difference of Gaussians
     #diff = vigra.gaussianSmoothing(probs,2) - sm_probs
     #volumina_single_layer(diff)
-
-    # Hessian of Gaussian
-    #hessian = vigra.filters.hessianOfGaussian(probs, sigma = 2)
-    #hessian_ev = vigra.filters.tensorEigenvalues( hessian )
-    #volumina_single_layer(hessian_ev)
-    #hessian_ev_weighted = np.divide( hessian_ev[:,:,:,0],  (hessian_ev[:,:,:,1] + hessian_ev[:,:,:,2] ) )
 
     seeds = vigra.analysis.extendedLocalMinima3D(sm_probs, neighborhood = 26)
     SEEDS = vigra.analysis.labelVolumeWithBackground(seeds)
@@ -73,12 +100,12 @@ def watershed_supervoxel_vigra(probs):
     #plot.imshow(SEEDS[:,:,25])
     #plot.show()
 
-    seg_ws, maxRegionLabel = vigra.analysis.watersheds(probs,
+    seg_ws, maxRegionLabel = vigra.analysis.watersheds(sm_probs,
     					neighborhood = 6, seeds = SEEDS)
 
     seg_ws = vigra.analysis.labelVolumeWithBackground(seg_ws)
 
-    volumina_double_layer(probs, seg_ws)
+    #volumina_double_layer(probs, seg_ws)
 
     return seg_ws
 

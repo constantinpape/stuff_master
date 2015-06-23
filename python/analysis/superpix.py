@@ -37,12 +37,12 @@ if __name__ == '__main__':
 
     #segmentation = watershed_supervoxel_vigra(probs)
 
-    volumina_double_layer(probs[:,:,4],segmentation[:,:,4])
+    #volumina_double_layer(probs,segmentation)
 
     path = "/home/constantin/Work/data_ssd/data_080515/pedunculus/superpixel/"
 
     #name = "slic_vigra"
-    name = "watershed_vigra"
+    name = "bestpix/hess1+hess0+smooth"
     #name = "watershed_voxel"
 
     fpath = path + name + ".h5"
