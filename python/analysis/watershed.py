@@ -14,14 +14,19 @@ def watershed_superpixel():
 # @ param: offset, labeloffset for the segmentation, in case a stack of images is segmented, default 0
 def watershed_superpixel_vigra(probs, offset = 0):
     # in nikos script: substract the mean and take the abs value
+    # threshold:
+
     #hmap = np.abs( probs - np.mean(probs) )
-    hmap = probs
+    hmap = probs.copy()
+
+    # threshold the data
+    hmap[hmap < 0.45] = 0.
 
     # smooth the hmap
-    hmap_smooth = vigra.gaussianSmoothing(hmap, 2.5)
+    hmap_smooth = vigra.gaussianSmoothing(hmap, 3)
 
     # Hessian of Gaussian
-    hessian = vigra.filters.hessianOfGaussian(hmap, sigma = 2)
+    hessian = vigra.filters.hessianOfGaussian(hmap, sigma = 3)
     hessian_ev = vigra.filters.tensorEigenvalues( hessian )
 
     # combine the filters
@@ -35,11 +40,10 @@ def watershed_superpixel_vigra(probs, offset = 0):
     #line_filter =  np.multiply( (h_ev0 <= 0), np.exp( - np.divide( np.square(h_ev0), 2*np.square(a_0*h_ev1) ) ) )
     #line_filter += np.multiply( (h_ev0  > 0), np.exp( - np.divide( np.square(h_ev0), 2*np.square(a_1*h_ev1) ) ) )
 
-    #volumina_n_layer( [ probs,
+    #volumina_n_layer( [ hmap,
     #    np.absolute(hessian_ev[:,:,0]),
     #    np.absolute(hessian_ev[:,:,1]),
-    #    combination,
-    #    line_filter ] )
+    #    combination] )
     #quit()
 
 

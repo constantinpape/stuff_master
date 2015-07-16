@@ -64,7 +64,6 @@ def preprocess_for_bgsmoothing_pedunculus( labeling ):
 # smooth away the background in the gt labeling with watershed growing
 def smooth_background( labeling ):
 
-    labeling = preprocess_for_bgsmoothing_pedunculus(labeling)
     offset = 0
     labeling_ret = np.zeros( labeling.shape )
     for z in range(labeling.shape[2]):
@@ -122,11 +121,10 @@ def graph_to_gt(labeling, raw):
 
     return gt
 
-
-if __name__ == '__main__':
+# gt for data_090515/pedunculus
+def gt_pedunculus():
     labels_path = "/home/constantin/Work/data_ssd/data_080515/pedunculus/150401_pedunculus_membrane_labeling.tif"
     raw_path    = "/home/constantin/Work/data_ssd/data_080515/pedunculus/150401pedunculus_middle_512x512_first30_sliced.h5"
-    probs_path  = "/home/constantin/Work/data_ssd/data_080515/pedunculus/pixel_probabilities/probs_final.h5"
 
     labels = vigra.readVolume(labels_path)
 
@@ -134,13 +132,29 @@ if __name__ == '__main__':
     labels = np.delete(labels, 6, axis = 2)
 
     raw = vigra.readHDF5(raw_path, "data")
-    probs = vigra.readHDF5(probs_path, "exported_data").astype(np.float32)
 
-    #gt = graph_to_gt(labels, raw)
-    #gt = smooth_background(labels)
-    gt = get_gt_2d(labels)
+    labels = preprocess_for_bgsmoothing_pedunculus(labels)
+    gt = smooth_background(labels)
 
     volumina_n_layer( (raw, labels, gt) )
 
     gt_path = "/home/constantin/Work/data_ssd/data_080515/pedunculus/ground_truth_seg.h5"
     vigra.writeHDF5(gt, gt_path, "gt")
+
+def gt_isbi2012():
+    labels_path = "/home/constantin/Work/data_ssd/data_090615/isbi2012/train-labels.h5"
+    raw_path    = "/home/constantin/Work/data_ssd/data_090615/isbi2012/train-volume.h5"
+
+    labels      = vigra.readHDF5(labels_path, "labels")
+    raw         = vigra.readHDF5(raw_path, "data")
+
+    gt          = smooth_background(labels)
+
+    #volumina_n_layer( (raw, labels, gt) )
+
+    gt_path = "/home/constantin/Work/data_ssd/data_090615/isbi2012/groundtruth/ground_truth_seg.h5"
+    vigra.writeHDF5(gt, gt_path, "gt")
+
+
+if __name__ == '__main__':
+    gt_isbi2012()

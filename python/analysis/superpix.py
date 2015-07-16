@@ -13,14 +13,15 @@ if __name__ == '__main__':
     #path_probs = "/home/constantin/Work/data_ssd/data_090515/2x2x2nm/data_sub_combined_Probabilities_sliced.h5"
     #key_probs  = "data"
 
-    path_probs = "/home/constantin/Work/data_ssd/data_080515/pedunculus/pixel_probabilities/combined_autocontext_probs.h5"
+    path_probs = "/home/constantin/Work/data_ssd/data_090615/isbi2012/pixel_probabilities/train-probs_binary.h5"
     key_probs  = "exported_data"
 
-    probs   = vigra.readHDF5(path_probs, key_probs)
+    probs = vigra.readHDF5(path_probs, key_probs)
     probs = np.squeeze(probs)
-    # exclude slice 6 for this data, which is dark...
     probs = probs[:,:,:,0]
-    probs   = np.delete(probs,6,axis = 2)
+    print probs.shape
+    # exclude slice 6 for this data, which is dark...
+    #probs   = np.delete(probs,6,axis = 2)
     # verify that the correct slice was removed
     #volumina_single_layer(probs)
 
@@ -39,10 +40,10 @@ if __name__ == '__main__':
 
     #volumina_double_layer(probs,segmentation)
 
-    path = "/home/constantin/Work/data_ssd/data_080515/pedunculus/superpixel/"
+    path = "/home/constantin/Work/data_ssd/data_090615/isbi2012/superpixel/"
 
     #name = "slic_vigra"
-    name = "bestpix/hess1+hess0+smooth"
+    name = "watershed"
     #name = "watershed_voxel"
 
     fpath = path + name + ".h5"
