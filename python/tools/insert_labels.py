@@ -45,10 +45,7 @@ def transfer(labelfile, new_project_filepath):
 
 
 if __name__ == '__main__':
-    #labelfile        = "/home/constantin/Work/data_ssd/data_090515/2x2x2nm/data_sub_labels.h5"
-    #new_project_file = "/home/constantin/Work/data_ssd/data_090515/2x2x2nm/MyProject_multichannel.ilp"
-
-    labelfile        = "/home/constantin/Work/data_ssd/data_080515/pedunculus/2label_label.h5"
-    new_project_file = "/home/constantin/Work/data_ssd/data_080515/pedunculus/labeling_combined.ilp"
+    labelfile        = "/home/constantin/Work/data_ssd/data_090615/isbi2012/pixel_probabilities/labels.h5"
+    new_project_file = "/home/constantin/Work/data_ssd/data_090615/isbi2012/pixel_probabilities/multi_labeling_2d.ilp"
 
     transfer(labelfile, new_project_file)

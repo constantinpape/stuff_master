@@ -11,7 +11,7 @@ def extract_labels(in_path, out_folder, data_nr):
     shape = ( shape[0] , shape[1], shape[2] )
     print shape
     # open new h5 file to store the extracted labels
-    out_file = out_folder + "/2label_labels.h5"
+    out_file = out_folder + "/labels.h5"
     f_out = h5py.File(out_file,"w")
     dset  = f_out.create_dataset("labels", shape, dtype = 'i', chunks = True )
     assert( len(blocks) == len(block_slices) )
@@ -29,13 +29,11 @@ def extract_labels(in_path, out_folder, data_nr):
         #print blocks[b][:,:,:,0].transpose( (1,2,0) ).shape
         # BE AWARE OF TRANSPOSING!
         dset[  bounds[2]:bounds[3], bounds[4]:bounds[5], bounds[0]:bounds[1] ] = blocks[b][:,:,:,0].transpose( (1,2,0) )
+        #dset[  bounds[0]:bounds[1], bounds[2]:bounds[3], bounds[4]:bounds[5] ] = blocks[b][:,:,:,0].transpose( (1,2,0) )
 
 if __name__ == '__main__':
-    #in_path    = "/home/constantin/Work/data_ssd/data_090515/2x2x2nm/MyProject_sub.ilp"
-    #out_folder = "/home/constantin/Work/data_ssd/data_090515/2x2x2nm"
-
-    in_path    = "/home/constantin/Work/data_ssd/data_080515/pedunculus/2label.ilp"
-    out_folder = "/home/constantin/Work/data_ssd/data_080515/pedunculus"
+    in_path    = "/home/constantin/Work/data_ssd/data_090615/isbi2012/pixel_probabilities/multi_labeling.ilp"
+    out_folder = "/home/constantin/Work/data_ssd/data_090615/isbi2012/pixel_probabilities"
 
     extract_labels(in_path, out_folder, 0)
 

@@ -5,8 +5,36 @@ from volumina_viewer import volumina_single_layer
 from volumina_viewer import volumina_double_layer
 from volumina_viewer import volumina_n_layer
 
-def watershed_superpixel():
-	pass
+
+def watersheds_thresholded(probs, offset = 0):
+
+    hmap = probs.copy()
+
+    disc = vigra.filters.discRankOrderFilter(255. * hmap, 4, 0.1 )
+
+    #volumina_double_layer(hmap, disc)
+    #quit()
+
+    thresh = np.ones( disc.shape )
+    thresh[disc < .8 * 255] = 0.
+
+    SEEDS = vigra.analysis.labelImageWithBackground(thresh.astype(np.float32))
+
+    #volumina_double_layer(hmap, SEEDS)
+    #quit()
+
+    seg_ws, maxRegionLabel = vigra.analysis.watersheds(vigra.filters.gaussianSmoothing(disc,3),
+    				neighborhood = 8, seeds = SEEDS.astype(np.uint32) )
+    seg_ws = vigra.analysis.labelImage(seg_ws)
+
+    if offset != 0:
+    	seg_ws += offset * np.ones( seg_ws.shape )
+
+    volumina_double_layer(hmap, seg_ws)
+    quit()
+
+    return seg_ws
+
 
 # perform the watershed algorithm implemented in vigra
 # Adapted from superpixel/watershed/ws.py
@@ -20,10 +48,10 @@ def watershed_superpixel_vigra(probs, offset = 0):
     hmap = probs.copy()
 
     # threshold the data
-    hmap[hmap < 0.45] = 0.
+    #hmap[hmap < 0.45] = 0.
 
     # smooth the hmap
-    hmap_smooth = vigra.gaussianSmoothing(hmap, 3)
+    hmap_smooth = vigra.gaussianSmoothing(hmap, 2)
 
     # Hessian of Gaussian
     hessian = vigra.filters.hessianOfGaussian(hmap, sigma = 3)
@@ -32,7 +60,7 @@ def watershed_superpixel_vigra(probs, offset = 0):
     # combine the filters
     h_ev0 = hessian_ev[:,:,0]
     h_ev1 = hessian_ev[:,:,1]
-    combination = 2*np.absolute( h_ev0 ) +3*np.absolute( h_ev1 ) + hmap_smooth
+    combination = 3*np.absolute( h_ev0 ) + 2*np.absolute( h_ev1 ) + hmap_smooth
 
     # construct a line filter (cf. https://www.spl.harvard.edu/archive/spl-pre2007/pages/papers/yoshi/node3.html)
     #a_0 = 0.5
@@ -40,12 +68,10 @@ def watershed_superpixel_vigra(probs, offset = 0):
     #line_filter =  np.multiply( (h_ev0 <= 0), np.exp( - np.divide( np.square(h_ev0), 2*np.square(a_0*h_ev1) ) ) )
     #line_filter += np.multiply( (h_ev0  > 0), np.exp( - np.divide( np.square(h_ev0), 2*np.square(a_1*h_ev1) ) ) )
 
-    #volumina_n_layer( [ hmap,
-    #    np.absolute(hessian_ev[:,:,0]),
+    #volumina_n_layer( [ np.absolute(hessian_ev[:,:,0]),
     #    np.absolute(hessian_ev[:,:,1]),
     #    combination] )
     #quit()
-
 
     # find the local minima
     seeds = vigra.analysis.extendedLocalMinima(combination, neighborhood = 8)
@@ -63,6 +89,7 @@ def watershed_superpixel_vigra(probs, offset = 0):
     	seg_ws += offset * np.ones( seg_ws.shape )
 
     #volumina_double_layer(probs, seg_ws)
+    #quit()
 
     return seg_ws
 

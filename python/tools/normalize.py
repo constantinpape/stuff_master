@@ -18,11 +18,11 @@ def normalize(f):
 
 
 if __name__ == '__main__':
-    f = "/home/constantin/Work/data_ssd/data_090615/isbi2012/test-volume.tif"
+    f = "/home/constantin/Work/data_ssd/data_090615/isbi2012/train-volume.tif"
     dat_norm = normalize(f)
 
     #dat = to_dat(f)
     #volumina_double_layer( dat, dat_norm )
 
-    save_f = "/home/constantin/Work/data_ssd/data_090615/isbi2012/test-volume.h5"
+    save_f = "/home/constantin/Work/data_ssd/data_090615/train-volume.h5"
     vigra.writeHDF5(dat_norm, save_f, "data")

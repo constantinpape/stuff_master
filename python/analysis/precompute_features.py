@@ -116,17 +116,17 @@ def compute_disc_rank_order(raw, save_path):
 
 
 def compute_features_isbi2012():
-    raw_path = "/home/constantin/Work/data_ssd/data_090615/isbi2012/test-volume.h5"
+    raw_path = "/home/constantin/Work/data_ssd/data_090615/isbi2012/train-volume.h5"
     raw_key = "data"
 
     raw = vigra.readHDF5(raw_path, raw_key)
 
     sigmas = ( 0.3, 0.7, 1.0, 1.6, 3.5, 5.0 )
 
-    feature_path = "/home/constantin/Work/data_ssd/data_090615/isbi2012/features/test-"
+    feature_path = "/home/constantin/Work/data_ssd/data_090615/isbi2012/features/train-"
 
-    #compute_ilastik_2dfeatures(raw, feature_path, sigmas)
-    compute_nonlinear_diffusion(raw, feature_path, 0.2, 10.0)
+    compute_ilastik_2dfeatures(raw, feature_path, sigmas)
+    #compute_nonlinear_diffusion(raw, feature_path, 0.2, 10.0)
 
 
 if __name__ == '__main__':

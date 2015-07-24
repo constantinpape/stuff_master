@@ -155,6 +155,22 @@ def gt_isbi2012():
     gt_path = "/home/constantin/Work/data_ssd/data_090615/isbi2012/groundtruth/ground_truth_seg.h5"
     vigra.writeHDF5(gt, gt_path, "gt")
 
+def gt_isbi2013():
+    labels_path = "/home/constantin/Work/data_ssd/data_150615/isbi2013/ground_truth/ground-truth.h5"
+    raw_path    = "/home/constantin/Work/data_ssd/data_150615/isbi2013/train-input.h5"
+
+    labels      = vigra.readHDF5(labels_path, "gt")
+    raw         = vigra.readHDF5(raw_path, "data")
+
+    gt          = smooth_background(labels)
+    gt = gt.transpose(1,0,2)
+
+    #volumina_n_layer( (raw, labels, gt) )
+    #quit()
+
+    gt_path = "/home/constantin/Work/data_ssd/data_150615/isbi2013/ground_truth/ground-truth_smooth.h5"
+    vigra.writeHDF5(gt, gt_path, "gt")
+
 
 if __name__ == '__main__':
-    gt_isbi2012()
+    gt_isbi2013()
