@@ -51,16 +51,17 @@ def watershed_superpixel_vigra(probs, offset = 0):
     #hmap[hmap < 0.45] = 0.
 
     # smooth the hmap
-    hmap_smooth = vigra.gaussianSmoothing(hmap, 2)
+    hmap_smooth = vigra.gaussianSmoothing(hmap, 1.5)
 
     # Hessian of Gaussian
-    hessian = vigra.filters.hessianOfGaussian(hmap, sigma = 3)
+    hessian = vigra.filters.hessianOfGaussian(hmap, sigma = 1.5)
     hessian_ev = vigra.filters.tensorEigenvalues( hessian )
 
     # combine the filters
     h_ev0 = hessian_ev[:,:,0]
     h_ev1 = hessian_ev[:,:,1]
-    combination = 3*np.absolute( h_ev0 ) + 2*np.absolute( h_ev1 ) + hmap_smooth
+    combination = 3*np.absolute( h_ev0 ) + 3*np.absolute( h_ev1 ) + hmap_smooth
+    #combination = hmap
 
     # construct a line filter (cf. https://www.spl.harvard.edu/archive/spl-pre2007/pages/papers/yoshi/node3.html)
     #a_0 = 0.5

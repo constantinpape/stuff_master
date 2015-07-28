@@ -1,3 +1,0 @@
-import blub
-
-blub.blob()

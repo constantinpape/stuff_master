@@ -103,12 +103,12 @@ def make_superpix_isbi2013():
     		offset = np.max(segmentation[:,:,layer-1])
     	segmentation[:,:,layer] = watershed_superpixel_vigra(probs[:,:,layer], offset)
 
-    volumina_n_layer( (raw, probs, segmentation) )
+    #volumina_n_layer( (raw, probs, segmentation) )
     #quit()
 
     path = "/home/constantin/Work/data_ssd/data_150615/isbi2013/superpixel/"
 
-    name = "watershed-test_nn"
+    name = "watershed_nn_test_2"
 
     fpath = path + name + ".h5"
     vigra.impex.writeHDF5(segmentation, fpath, "superpixel" )
