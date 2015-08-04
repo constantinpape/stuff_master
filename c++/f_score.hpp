@@ -4,18 +4,15 @@
 #include <exception>
 #include <algorithm>
 #include <iterator>
-#include <iostream>
 
 template<class ITERATOR_0, class ITERATOR_1>
-double fscore(
+std::pair<double, double> fscore(
         ITERATOR_0 segA_begin,
         ITERATOR_0 segA_end,
         ITERATOR_1 segB_begin,
         ITERATOR_1 segB_end
         )
 {
-    std::cout << "DEBUG Start" << std::endl;
-
     typedef typename std::iterator_traits<ITERATOR_0>::value_type Label0;
     typedef typename std::iterator_traits<ITERATOR_1>::value_type Label1;
 
@@ -100,7 +97,6 @@ double fscore(
     double ri = 1. - (sumA + sumB - 2.0*sumAB) / (N*N);
     double f_score = 2.0 * prec * rec / (prec + rec );
 
-    //return std::pair<double, double>(ri, f_score);
-    return f_score;
+    return std::pair<double, double>(ri, f_score);
 }
 

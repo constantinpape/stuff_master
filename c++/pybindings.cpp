@@ -8,11 +8,15 @@
 #include "f_score.hpp"
 
 template <class T>
-double py_fscore(
+vigra::NumpyArray<1, double> py_fscore(
     vigra::NumpyArray<1, T> segA,
     vigra::NumpyArray<1, T> segB)
 {
-    return fscore( segA.begin(), segA.end(), segB.begin(), segB.end() );
+    vigra::NumpyArray<1, double> ret( vigra::NumpyArray<1, double>::difference_type(2) );
+    std::pair<double, double> res = fscore( segA.begin(), segA.end(), segB.begin(), segB.end() );
+    ret[0] = res.first;
+    ret[1] = res.second;
+    return ret;
 }
 
 template<class T>

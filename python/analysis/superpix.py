@@ -4,7 +4,9 @@ import vigra
 
 from slic import slic_superpixel
 from slic import slic_superpixel_vigra
-from watershed import watershed_superpixel_vigra, watershed_supervoxel_vigra, watersheds_thresholded
+from watershed import watershed_superpixel_vigra, watershed_supervoxel_vigra
+from watershed import watershed_distancetransform_2d, watershed_distancetransform_3d
+
 from volumina_viewer import volumina_single_layer, volumina_double_layer, volumina_n_layer
 
 
@@ -75,17 +77,16 @@ def make_superpix_isbi2012():
 
 
 def make_superpix_isbi2013():
-    path_probs = "/home/constantin/Work/data_ssd/data_150615/isbi2013/pixel_probs/test-probs-nn.h5"
+    path_probs = "/home/constantin/Work/data_ssd/data_150615/isbi2013/pixel_probs/train-probs-nn.h5"
     key_probs  = "exported_data"
 
-    path_raw = "/home/constantin/Work/data_ssd/data_150615/isbi2013/test-input.h5"
+    path_raw = "/home/constantin/Work/data_ssd/data_150615/isbi2013/train-input.h5"
     key_raw  = "data"
 
     probs = vigra.readHDF5(path_probs, key_probs)
     probs = np.squeeze(probs)
 
     probs = np.array(probs)
-    print probs.max(), probs.min()
     probs  = 1. - probs
 
     raw = vigra.readHDF5(path_raw, key_raw)
@@ -95,20 +96,24 @@ def make_superpix_isbi2013():
 
     # use superpixel algorithm to segment the image
     # stack 2d segmented images
-    segmentation = np.zeros( (probs.shape[0], probs.shape[1], probs.shape[2]) )
+    segmentation = np.zeros( (probs.shape[0], probs.shape[1], probs.shape[2]) ,dtype = np.uint32)
     # need offset to keep superpixel of the individual layers seperate!
     offset = 0
     for layer in range(probs.shape[2]):
     	if layer != 0:
     		offset = np.max(segmentation[:,:,layer-1])
-    	segmentation[:,:,layer] = watershed_superpixel_vigra(probs[:,:,layer], offset)
+    	#segmentation[:,:,layer] = watershed_superpixel_vigra(probs[:,:,layer], offset)
+    	segmentation[:,:,layer] = watershed_distancetransform_2d(probs[:,:,layer], offset)
 
-    #volumina_n_layer( (raw, probs, segmentation) )
+    #segmentation[:,:,2] = watershed_distancetransform_2d( probs[:,:,2], 0 )
+
+    print "Number of superpixels:", segmentation.max()
+    volumina_n_layer( (probs, segmentation, segmentation) )
     #quit()
 
     path = "/home/constantin/Work/data_ssd/data_150615/isbi2013/superpixel/"
 
-    name = "watershed_nn_test_2"
+    name = "watershed_nn_dt_new"
 
     fpath = path + name + ".h5"
     vigra.impex.writeHDF5(segmentation, fpath, "superpixel" )

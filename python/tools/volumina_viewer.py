@@ -5,6 +5,8 @@ import vigra
 import numpy as np
 import argparse
 
+from types import *
+
 # plot single data layer
 def volumina_single_layer(data):
 	app = QApplication (sys.argv)
@@ -65,10 +67,10 @@ def volumina_n_layer(data):
     	data_type = type(d[mask])
     	print data_type
 
-    	if data_type == np.float32 or data_type == float:
-    		v.addGrayscaleLayer(d , name = layer_name)
+    	if data_type is FloatType or data_type == np.float32 or data_type == np.float64:
+    	    v.addGrayscaleLayer(d , name = layer_name)
     	else:
-    	    v.addRandomColorsLayer(d.astype(np.int32), name = layer_name)
+    	    v.addRandomColorsLayer(d.astype(np.uint32), name = layer_name)
     	ind += 1
 
     app . exec_ ()

@@ -5,6 +5,23 @@ from volumina_viewer import volumina_single_layer
 from volumina_viewer import volumina_double_layer
 from volumina_viewer import volumina_n_layer
 
+from skneuro.oversegmentation import wsDtSegmentation, wsDtSegmentation2d
+
+
+def watershed_distancetransform_3d(probs):
+    seg = wsDtSegmentation(probs, 0.2, 10, 20, 1.6, 3., cleanCloseSeeds = True)
+
+    return seg
+
+
+def watershed_distancetransform_2d(probs, offset = 0):
+    seg = wsDtSegmentation2d(probs, (0.2, 0.5), 10, 35, 2., 3., cleanCloseSeeds = True).astype(np.uint32)
+
+    if offset != 0:
+    	seg += offset * np.ones( seg.shape, dtype = np.uint32 )
+
+    #return seg, res_wsdt[1], res_wsdt[2].astype(np.float32)
+    return seg
 
 def watersheds_thresholded(probs, offset = 0):
 
