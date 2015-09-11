@@ -58,6 +58,50 @@ def preprocess_for_bgsmoothing_pedunculus( labeling ):
     labeling[460:,350:,28][np.where(labeling_smooth[460:,350:,28] == 0)] = 255
     labeling[460:,350:,28][np.where(labeling_smooth[460:,350:,28] == 255)] = 0
 
+    # add missing membrane labels at the boundaries
+    labeling[0,174,0] = 0
+    labeling[0,175,0] = 0
+
+    labeling[0,212,9] = 0
+    labeling[0,213,9] = 0
+
+    labeling[472,0,9] = 0
+    labeling[473,0,9] = 0
+
+    labeling[0,192,18] = 0
+    labeling[0,193,18] = 0
+
+    labeling[511,330,18] = 0
+    labeling[511,331,18] = 0
+
+    labeling[0,384,18] = 0
+    labeling[0,385,18] = 0
+    labeling[1,384,18] = 0
+    labeling[1,385,18] = 0
+
+    labeling[0,215,20] = 0
+    labeling[0,216,20] = 0
+
+    labeling[0,67,20] = 0
+    labeling[0,68,20] = 0
+
+    labeling[482,0,20] = 0
+    labeling[483,0,20] = 0
+
+    labeling[0,248,21] = 0
+    labeling[0,249,21] = 0
+
+    labeling[0,212,21] = 0
+    labeling[0,213,21] = 0
+    labeling[1,212,21] = 0
+    labeling[1,213,21] = 0
+
+    return labeling
+
+
+# preprocessing to prevent the superpixel in the grondtruth from spilling out
+def preprocess_for_bgsmoothing_isbi2012( labeling ):
+
     return labeling
 
 
@@ -134,7 +178,7 @@ def gt_pedunculus():
     raw = vigra.readHDF5(raw_path, "data")
 
     labels = preprocess_for_bgsmoothing_pedunculus(labels)
-    gt = smooth_background(labels)
+    gt = smooth_background(labels).astype(np.uint32)
 
     volumina_n_layer( (raw, labels, gt) )
 
@@ -148,12 +192,13 @@ def gt_isbi2012():
     labels      = vigra.readHDF5(labels_path, "labels")
     raw         = vigra.readHDF5(raw_path, "data")
 
-    gt          = smooth_background(labels)
+    labels      = preprocess_for_bgsmoothing_isbi2012(labels)
+    gt          = smooth_background(labels).astype(np.uint32)
 
-    #volumina_n_layer( (raw, labels, gt) )
+    volumina_n_layer( (raw, labels, gt) )
 
     gt_path = "/home/constantin/Work/data_ssd/data_090615/isbi2012/groundtruth/ground_truth_seg.h5"
-    vigra.writeHDF5(gt, gt_path, "gt")
+    #vigra.writeHDF5(gt, gt_path, "gt")
 
 def gt_isbi2013():
     labels_path = "/home/constantin/Work/data_ssd/data_150615/isbi2013/ground_truth/ground-truth.h5"
@@ -173,4 +218,4 @@ def gt_isbi2013():
 
 
 if __name__ == '__main__':
-    gt_isbi2013()
+    gt_isbi2012()

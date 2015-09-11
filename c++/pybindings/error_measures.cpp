@@ -5,8 +5,7 @@
 #include <vigra/numpy_array.hxx>
 #include <vigra/numpy_array_converters.hxx>
 
-#include "f_score.hpp"
-#include "silence.hpp" 
+#include "../f_score.hpp"
 
 template <class T>
 vigra::NumpyArray<1, double> py_fscore(
@@ -48,18 +47,4 @@ BOOST_PYTHON_MODULE(error_measures) {
     // No not change 4 line above
     
     export_fscore();
-}
-
-void export_silence()
-{
-    using namespace boost::python;
-    
-    def("restore_output", restore_output);
-    def("test_output",    test_output);
-    def("redirect_output_to_file", redirect_output_to_file);
-}
-
-
-BOOST_PYTHON_MODULE(silence) {
-    export_silence();
 }
