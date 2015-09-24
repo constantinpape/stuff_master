@@ -1,9 +1,13 @@
 #pragma once
+
 #include <vector>
 #include <utility>
 #include <exception>
 #include <algorithm>
 #include <iterator>
+
+// adapted from:
+// https://github.com/fiji/Trainable_Segmentation/blob/master/src/main/java/trainableSegmentation/metrics/RandError.java
 
 template<class ITERATOR_0, class ITERATOR_1>
 std::pair<double, double> fscore(
@@ -50,10 +54,10 @@ std::pair<double, double> fscore(
     }
     
     // compute the sum of cols
-    std::vector<double> b_j(p_ij.size(), 0.);
+    std::vector<double> b_j(p_ij[0].size(), 0.);
     for( size_t j = 1; j < b_j.size(); j++ )
     {
-        for( size_t i = 0; i < p_ij.size(); i++ )
+        for( size_t i = 1; i < p_ij.size(); i++ )
         {
             b_j[j] += p_ij[i][j];
         }
