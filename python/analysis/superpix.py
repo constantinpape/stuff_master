@@ -97,18 +97,23 @@ def make_superpix_isbi2013():
     # use superpixel algorithm to segment the image
     # stack 2d segmented images
     segmentation = np.zeros( (probs.shape[0], probs.shape[1], probs.shape[2]) ,dtype = np.uint32)
+    seeds = np.zeros( (probs.shape[0], probs.shape[1], probs.shape[2]) ,dtype = np.uint32)
+    weights = np.zeros( (probs.shape[0], probs.shape[1], probs.shape[2]) ,dtype = np.uint32)
     # need offset to keep superpixel of the individual layers seperate!
     offset = 0
     for layer in range(probs.shape[2]):
     	if layer != 0:
     		offset = np.max(segmentation[:,:,layer-1])
     	#segmentation[:,:,layer] = watershed_superpixel_vigra(probs[:,:,layer], offset)
-    	segmentation[:,:,layer] = watershed_distancetransform_2d(probs[:,:,layer], offset)
+        res_wsdt = watershed_distancetransform_2d(probs[:,:,layer], offset)
+    	segmentation[:,:,layer] = res_wsdt[0]
+        seeds[:,:,layer] = res_wsdt[1]
+    	weights[:,:,layer] = res_wsdt[2]
 
     #segmentation[:,:,2] = watershed_distancetransform_2d( probs[:,:,2], 0 )
 
     print "Number of superpixels:", segmentation.max()
-    volumina_n_layer( (probs, segmentation, segmentation) )
+    volumina_n_layer( (probs, segmentation, seeds, weights) )
     #quit()
 
     path = "/home/constantin/Work/data_ssd/data_150615/isbi2013/superpixel/"
@@ -119,5 +124,39 @@ def make_superpix_isbi2013():
     vigra.impex.writeHDF5(segmentation, fpath, "superpixel" )
 
 
+def make_superpix_sopnetcomparison():
+    path_probs = "/home/constantin/Work/data_ssd/data_110915/sopnet_comparison/pixel_probabilities/probs-final_autocontext.h5"
+    key_probs = "data"
+
+    probs = vigra.readHDF5(path_probs, key_probs)
+
+    segmentation = np.zeros( (probs.shape[0], probs.shape[1], probs.shape[2]) ,dtype = np.uint32)
+    seeds        = np.zeros( (probs.shape[0], probs.shape[1], probs.shape[2]) ,dtype = np.uint32)
+    weights      = np.zeros( (probs.shape[0], probs.shape[1], probs.shape[2]) ,dtype = np.uint32)
+
+    # need offset to keep superpixel of the individual layers seperate!
+    offset = 0
+    for layer in range(probs.shape[2]):
+    	if layer != 0:
+    		offset = np.max(segmentation[:,:,layer-1])
+    	#segmentation[:,:,layer] = watershed_superpixel_vigra(probs[:,:,layer], offset)
+        res_wsdt = watershed_distancetransform_2d(probs[:,:,layer], offset)
+    	segmentation[:,:,layer] = res_wsdt[0]
+        seeds[:,:,layer] = res_wsdt[1]
+    	weights[:,:,layer] = res_wsdt[2]
+
+    #segmentation[:,:,2] = watershed_distancetransform_2d( probs[:,:,2], 0 )
+
+    print "Number of superpixels:", segmentation.max()
+
+    path = "/home/constantin/Work/data_ssd/data_110915/sopnet_comparison/superpixel/"
+    name = "watershed_dt_mitooff"
+    fpath = path + name + ".h5"
+
+    vigra.impex.writeHDF5(segmentation, fpath, "superpixel" )
+
+
+
+
 if __name__ == '__main__':
-    make_superpix_isbi2013()
+    make_superpix_sopnetcomparison()

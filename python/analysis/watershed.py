@@ -15,13 +15,25 @@ def watershed_distancetransform_3d(probs):
 
 
 def watershed_distancetransform_2d(probs, offset = 0):
-    seg = wsDtSegmentation2d(probs, (0.2, 0.5), 10, 35, 2., 3., cleanCloseSeeds = True).astype(np.uint32)
+
+    # smooth the hmap
+    #hmap_smooth = vigra.gaussianSmoothing(probs, 2)
+    ## Hessian of Gaussian
+    #hessian = vigra.filters.hessianOfGaussian(probs, sigma = 2)
+    #hessian_ev = vigra.filters.tensorEigenvalues( hessian )
+    ## combine the filters
+    #h_ev0 = hessian_ev[:,:,0]
+    #h_ev1 = hessian_ev[:,:,1]
+    #combination = 5*np.absolute( h_ev0 ) + 5*np.absolute( h_ev1 ) + hmap_smooth
+
+    #combination = hmap
+    seg, seeds, weights  = wsDtSegmentation2d(probs, 0.5, 10, 35, 1.6, 4., cleanCloseSeeds = True)
 
     if offset != 0:
     	seg += offset * np.ones( seg.shape, dtype = np.uint32 )
 
-    #return seg, res_wsdt[1], res_wsdt[2].astype(np.float32)
-    return seg
+    #return seg
+    return seg, seeds, weights
 
 def watersheds_thresholded(probs, offset = 0):
 

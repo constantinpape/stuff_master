@@ -1,0 +1,11 @@
+Evaluation of features for isbi2012_train with 2d-features: False
+Using facelabels loaded from :
+/home/constantin/Work/data_ssd/data_090615/isbi2012/facelabels/facelabs.h5
+Feature:	OOB-Error:
+ffeat_br	0.252440255806
+ffeat_be	0.310669808145
+ffeat_bet	0.311342982161
+ffeat_brt	0.243352406597
+ffeat_bert	0.240996297543
+ffeat_er	0.233591383373
+ffeat_ert	0.230898687311

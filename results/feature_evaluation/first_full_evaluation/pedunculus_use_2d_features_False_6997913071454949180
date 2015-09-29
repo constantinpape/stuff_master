@@ -1,0 +1,11 @@
+Evaluation of features for pedunculus with 2d-features: False
+Using facelabels loaded from :
+/home/constantin/Work/data_ssd/data_080515/pedunculus/facelabels/facelabeling_anisotrop_2d_2_mitooff.h5
+Feature:	OOB-Error:
+ffeat_br	0.111703674973
+ffeat_be	0.058954717347
+ffeat_bet	0.0590516823427
+ffeat_brt	0.111412779986
+ffeat_bert	0.0529428876176
+ffeat_er	0.0562396974692
+ffeat_ert	0.0567245224474

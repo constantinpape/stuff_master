@@ -1,0 +1,12 @@
+This folder holds the results of feature evaluations on the datasets:
+pedunculus, isbi2012_train, isbi2013_nn_train
+
+The evaluations are done via random forest OOB-errer (so far).
+
+In first_full_evaluation, all present feature strings are evaluated, in 2d and 3d mode.
+
+In cms_evaluation, the features, which include topological features in 2d mode are re-calculated, this time with the center of mass distance added for the inter slice faces. 
+
+In rf_aniso_evaluation, training 2 random forests (one on inter- and the other on itra-slice faces) is evaluated.
+	-> In single_rf_baseline a single random forest w/ different features on the same labels is evaluated.
+	-> In two_rf, using both rfs is evaluated on different feature combinations.
