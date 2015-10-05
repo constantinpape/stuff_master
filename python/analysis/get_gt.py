@@ -204,18 +204,106 @@ def gt_isbi2013():
     labels_path = "/home/constantin/Work/data_ssd/data_150615/isbi2013/ground_truth/ground-truth.h5"
     raw_path    = "/home/constantin/Work/data_ssd/data_150615/isbi2013/train-input.h5"
 
-    labels      = vigra.readHDF5(labels_path, "gt")
+    gt_ignore   = vigra.readHDF5(labels_path, "gt")
     raw         = vigra.readHDF5(raw_path, "data")
 
-    gt          = smooth_background(labels)
-    gt = gt.transpose(1,0,2)
+    # smooth the gt to get rid of the ignorelabel
+    gt = np.zeros_like( gt_ignore )
 
-    #volumina_n_layer( (raw, labels, gt) )
-    #quit()
+    for z in range(gt_ignore.shape[2]):
 
-    gt_path = "/home/constantin/Work/data_ssd/data_150615/isbi2013/ground_truth/ground-truth_smooth.h5"
+        print "processing slice", z, "of", gt_ignore.shape[2]
+
+        gt_ignore_z = gt_ignore[:,:,z]
+
+        binary = np.zeros_like(gt_ignore_z)
+        binary[gt_ignore_z != 0] = 255
+
+        close = vigra.filters.discClosing( binary.astype(np.uint8), 4 )
+        cc = vigra.analysis.labelImageWithBackground(close.astype(np.uint32), background_value = 255)
+
+        # find the largest cc (except for zero)
+        counts = np.bincount(cc.flatten())
+        counts_sort = np.sort(counts)[::-1]
+
+        mask_myelin = np.zeros_like( cc )
+
+        for c in counts_sort:
+            # magic threshold!
+            if c > 4000:
+                id = np.where(counts == c)[0][0]
+                if id != 0:
+                    #print "Heureka!", c, id
+                    #print np.unique(cc)[id]
+                    mask_myelin[cc == id] = 1
+            else:
+                break
+
+        #volumina_n_layer( [ raw[:,:,z], gt_ignore_z.astype(np.uint32), mask_myelin ]  )
+        #quit()
+
+        derivative_filter = vigra.filters.gaussianGradientMagnitude( gt_ignore_z, 0.5 )
+        derivative_thresh = np.zeros_like( derivative_filter )
+        derivative_thresh[derivative_filter > 0.1] = 1.
+
+        dt = vigra.filters.distanceTransform2D(derivative_thresh)
+        dt = np.array(dt)
+
+        dtInv = vigra.filters.distanceTransform2D(derivative_thresh, background = False)
+        dtInv = np.array(dt)
+        dtInv[dtInv >0 ] -= 1
+
+        dtSigned = dt.max() - dt + dtInv
+
+        smoothed, maxRegionLabel = vigra.analysis.watersheds(
+                    dtSigned.astype(np.float32),
+                    neighborhood = 8,
+                    seeds = gt_ignore_z.astype(np.uint32) )
+
+        smoothed[ mask_myelin == 1] = 0
+
+        #volumina_n_layer( [ raw[:,:,z], gt_ignore_z.astype(np.uint32),  smoothed.astype(np.uint32)] )
+        #quit()
+
+        gt[:,:,z] =  smoothed
+
+    #gt = gt.transpose(1,0,2)
+
+    gt_path = "/home/constantin/Work/data_ssd/data_150615/isbi2013/ground_truth/ground-truth_nobg.h5"
     vigra.writeHDF5(gt, gt_path, "gt")
+
+    volumina_n_layer( [ raw, gt_ignore.astype(np.uint32), gt.astype(np.uint32) ] )
+
+
+# smooth away the background in the gt labeling with watershed growing
+def gt_sopnetcompare( gt_path ):
+
+    gt = vigra.readHDF5(gt_path, "gt")
+
+    gt = vigra.analysis.labelVolumeWithBackground(gt)
+
+    unique_labs = np.unique(gt)
+
+    i = 0
+    for l in unique_labs:
+        if l != i:
+            print "Non-consecutive labeling:"
+            print l, i
+            quit()
+        i += 1
+
+    print "Consecutive labeling"
+
+    save_path = gt_path[:-3] + "_smoothed.h5"
+
+    vigra.writeHDF5(gt, save_path, "gt")
+
+
 
 
 if __name__ == '__main__':
-    gt_isbi2012()
+    #path = "/home/constantin/Work/data_ssd/data_110915/sopnet_comparison/gt_stack2_test.h5"
+    #gt_sopnetcompare(path)
+
+    gt_isbi2013()
+
