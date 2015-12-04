@@ -1,39 +1,37 @@
 import vigra
 import numpy as np
 import matplotlib.pyplot as plot
+
 from volumina_viewer import volumina_single_layer
 from volumina_viewer import volumina_double_layer
 from volumina_viewer import volumina_n_layer
 
 from skneuro.oversegmentation import wsDtSegmentation, wsDtSegmentation2d
 
+# using wsdt implementation with different weights
+# TODO
 
-def watershed_distancetransform_3d(probs):
-    seg = wsDtSegmentation(probs, 0.2, 10, 20, 1.6, 3., cleanCloseSeeds = True)
 
-    return seg
-
+# using skneuro wsdt
 
 def watershed_distancetransform_2d(probs, offset = 0):
 
-    # smooth the hmap
-    #hmap_smooth = vigra.gaussianSmoothing(probs, 2)
-    ## Hessian of Gaussian
-    #hessian = vigra.filters.hessianOfGaussian(probs, sigma = 2)
-    #hessian_ev = vigra.filters.tensorEigenvalues( hessian )
-    ## combine the filters
-    #h_ev0 = hessian_ev[:,:,0]
-    #h_ev1 = hessian_ev[:,:,1]
-    #combination = 5*np.absolute( h_ev0 ) + 5*np.absolute( h_ev1 ) + hmap_smooth
-
-    #combination = hmap
-    seg, seeds, weights  = wsDtSegmentation2d(probs, 0.5, 10, 35, 1.6, 4., cleanCloseSeeds = True)
+    # syntax: wsDtSegmentation2d(pmap, threshold, minMembraneSize, minSegmentSize, sigmaMinima, sigmaWeights)
+    # normal values: threshold = 0.5, sigmaMinima = 1.6, sigmaWeights = 3.2
+    seg, seeds, weights  = wsDtSegmentation2d(probs, 0.25, 10, 10, 0.8, 0.6)
 
     if offset != 0:
     	seg += offset * np.ones( seg.shape, dtype = np.uint32 )
 
     #return seg
     return seg, seeds, weights
+
+
+def watershed_distancetransform_3d(probs):
+    seg = wsDtSegmentation(probs, 0.4, 10, 20, 1.6, 3., cleanCloseSeeds = True)
+
+    return seg
+
 
 def watersheds_thresholded(probs, offset = 0):
 

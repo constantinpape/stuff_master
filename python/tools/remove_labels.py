@@ -11,5 +11,5 @@ def delete_labels( project_filepath ):
     	labelset_group = project_file.create_group('PixelClassification/LabelSets')
 
 if __name__ == "__main__":
-    project_file = "/home/constantin/Work/data_ssd/data_090615/isbi2012/pixel_probabilities/binary_labeling_autocontext.ilp"
+    project_file = "/home/constantin/Work/data_ssd/data_010915/INI/pixel_probs/binary_labeling.ilp"
     delete_labels(project_file)
