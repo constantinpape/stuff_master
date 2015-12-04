@@ -1,0 +1,9 @@
+Evaluation of features for isbi2013_nn_train with 2d-features: True
+Learning from GT
+Feature:	OOB-Error:
+ffeat_brt	0.0703277579039
+ffeat_bert	0.0525467378025
+ffeat_ert	0.052339307217
+ffeat_brt2	0.0700394645478
+ffeat_bert2	0.0525643166656
+ffeat_ert2	0.0520035509304

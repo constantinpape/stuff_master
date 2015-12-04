@@ -1,0 +1,9 @@
+Evaluation of features for pedunculus with 2d-features: True
+Learning from GT
+Feature:	OOB-Error:
+ffeat_brt	0.060017928542
+ffeat_bert	0.0443707698364
+ffeat_ert	0.0442853958271
+ffeat_brt2	0.059202132453
+ffeat_bert2	0.0432514217144
+ffeat_ert2	0.0433273097227
