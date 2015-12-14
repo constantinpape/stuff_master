@@ -21,7 +21,9 @@ def compute_ilastik_2dfeatures(
                    "structureTensorEigenvalues",
                    "hessianOfGaussianEigenvalues")
 
-    list_path    = save_path + "feats"
+    if not os.path.exists(save_path):
+        os.makedirs(save_path)
+    list_path    = os.path.join(save_path, "feat_file_list.txt")
     if os.path.exists(list_path):
         feature_file = open(list_path, 'a')
     else:
@@ -49,7 +51,7 @@ def compute_ilastik_2dfeatures(
                 # for the structure tensor we need two scales
                 # do outer scale = 3 * inner scale for now
                 # TODO Thorsten does 2 loops, one for outer = 2 * inner, one for outer = 4 * inner
-                # probably should do this two
+                # probably should do this too
                 if feat == "structureTensorEigenvalues":
                     eval_str = "vigra.filters." + feat + "(raw[:,:,z], sig, 3*sig)"
 
@@ -62,12 +64,12 @@ def compute_ilastik_2dfeatures(
 
             if len(feat_array.shape) == 4:
                 for chan in range(feat_array.shape[3]):
-                    path = save_path + feat + "_" + str(sig) + "_channel_" + str(chan)  + ".h5"
+                    path = os.path.join(save_path, feat + "_" + str(sig) + "_channel_" + str(chan)  + ".h5")
                     vigra.writeHDF5(feat_array[:,:,:,chan].astype(np.float32), path, "data")
                     feature_file.write( path + '\n' )
 
             else:
-                path = save_path + feat + "_" + str(sig) + ".h5"
+                path = os.path.join(save_path, feat + "_" + str(sig) + ".h5")
                 vigra.writeHDF5(feat_array.astype(np.float32), path, "data")
                 feature_file.write( path + '\n' )
 

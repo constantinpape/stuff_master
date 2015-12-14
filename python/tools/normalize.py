@@ -18,11 +18,11 @@ def normalize(dat):
 
 if __name__ == '__main__':
     #f = "/home/constantin/raw_stack1.h5"
-    f = "/media/constantin/4c03279b-1283-477d-a03e-440898f78d6f/constantin_projects/data/data_131115/Sample_B/raw_data/raw.h5"
+    f = "/media/constantin/4c03279b-1283-477d-a03e-440898f78d6f/constantin_projects/data/data_131115/Sample_A_gt/raw_data.h5"
     dat = vigra.readHDF5(f,"data")
     dat_norm = normalize(dat)
 
     #volumina_double_layer( dat, dat_norm )
 
-    save_f = "/media/constantin/4c03279b-1283-477d-a03e-440898f78d6f/constantin_projects/data/data_131115/Sample_B/raw_data_norm.h5"
+    save_f = "/media/constantin/4c03279b-1283-477d-a03e-440898f78d6f/constantin_projects/data/data_131115/Sample_A_gt/raw_data_norm.h5"
     vigra.writeHDF5(dat_norm, save_f, "data")

@@ -15,7 +15,7 @@ class implicit_boundary_rf(object):
         assert len( self.X.shape ) == 4, "Data should have three spatial dimensions and feature channels"
         self.shape = self.X.shape
         # train the initial rf
-        self.rf = RandomForestClassifier(n_estimators = 15, n_jobs = 4)
+        self.rf = RandomForestClassifier(n_estimators = 15, n_jobs = 6)
         labeled = self.Y != 0.5
         X_train = self.X[labeled]
         Y_train = self.Y[labeled]
@@ -81,8 +81,8 @@ class implicit_boundary_rf(object):
                     self.Y[new_label_point[0], new_label_point[1], z] = new_label
 
 
-    def __fit_iteration(self):
-        self.__find_new_labels(1000)
+    def __fit_iteration(self, n_labels):
+        self.__find_new_labels(n_labels)
         X_train = X_train[labeled]
         Y_train = Y[labeled]
         self.rf.fit( X_train.reshape( X_train.shape[0] * X_train.shape[1] * X_train.shape[2], self.shape[4]  ), Y_train.ravel() )
