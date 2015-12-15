@@ -41,6 +41,6 @@ def plot_featcurve(res_path):
     plt.show()
 
 if __name__ == '__main__':
-    res_path = "./cross_validation/feature_num_eval/wrapper_test_ds_bert2_True.pkl"
+    res_path = "./cross_validation/feature_num_eval/filter_CMIM_test_ds_bert2_True.pkl"
 
     plot_featcurve(res_path)
