@@ -2,6 +2,7 @@ import numpy as np
 import vigra
 from precompute_features import compute_ilastik_2dfeatures
 import os
+import cPickle as pickle
 
 from sklearn.ensemble import RandomForestClassifier
 
@@ -53,29 +54,37 @@ def load_feats_and_gt_pedunculus():
     return (feats, gt)
 
 def eval_pixerror(pred, gt, thresh = 0.5):
-    assert pred.shape == gt.shape
-    miss = (pred != gt).flatten()
-    return np.sum(miss) / float(gt.size)
+    assert pred.shape == gt.shape, str(pred.shape) + " , " + str(gt.shape)
+    pred = np.array(pred)
+    gt   = np.array(gt)
+    correct = pred == gt
+    return np.sum(correct) / float(gt.size)
 
 def eval_rf_from_gt(X_tr, Y_tr, X_te, Y_te):
     print "Learning RF on GT"
-    rf = RandomForestClassifier(n_estimators = 15, n_jobs = 6)
+    #rf = RandomForestClassifier(n_estimators = 15, n_jobs = 6)
     # TODO think about balancing the labels for training!
-    rf.fit(X_tr.reshape( (X_tr.shape[0] * X_tr.shape[1] * X_tr.shape[2], X_tr.shape[3] ) ), Y_tr.ravel() )
+    #rf.fit(X_tr.reshape( (X_tr.shape[0] * X_tr.shape[1] * X_tr.shape[2], X_tr.shape[3] ) ), Y_tr.ravel() )
+    ## pickle
+    #with open("./rf_gt.pkl", 'w') as f:
+    #    pickle.dump(rf, f)
+    with open("./rf_gt.pkl", 'r') as f:
+        rf = pickle.load(f)
+
     print "Predicting"
-    # make sure 1 is the membrane channel
     pmap_train = rf.predict( X_tr.reshape( (X_tr.shape[0] * X_tr.shape[1] * X_tr.shape[2], X_tr.shape[3] ) ) )
     pmap_test = rf.predict(  X_te.reshape( (X_te.shape[0] * X_te.shape[1] * X_te.shape[2], X_te.shape[3] ) ) )
 
     # evaluate
     # TODO segementation quality measures after thresholding: RI, VI
-    pmap_train = pmap_train.reshape( X_tr.shape[0] * X_tr.shape[1] * X_tr.shape[2] )
-    pmap_test = pmap_test.reshape( X_te.shape[0] * X_te.shape[1] * X_te.shape[2] )
+    #pmap_train = pmap_train.reshape( X_tr.shape[0], X_tr.shape[1], X_tr.shape[2] )
+    #pmap_test  = pmap_test.reshape(  X_te.shape[0], X_te.shape[1], X_te.shape[2] )
+    # FIXME something in the reshaping goes wrong!
 
-    train_pix_error = eval_pixerror(pmap_train, Y_tr)
-    test_pix_error  = eval_pixerror(pmap_test,  Y_te)
+    train_pix_acc = eval_pixerror(pmap_train, Y_tr.ravel())
+    test_pix_acc  = eval_pixerror(pmap_test,  Y_te.ravel())
 
-    print train_pix_error, test_pix_error
+    print train_pix_acc, test_pix_acc
 
 
 
@@ -98,5 +107,3 @@ if __name__ == '__main__':
     Y_te  = gt[:,:,15:]
 
     eval_rf_from_gt(X_tr, Y_tr, X_te, Y_te)
-
-
