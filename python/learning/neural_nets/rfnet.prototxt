@@ -1,0 +1,35 @@
+name: "RFNet"
+
+input: "data"
+input_dim: 1
+input_dim: 3
+input_dim: 1
+input_dim: 1
+
+layers {
+  bottom: "data"
+  top: "fc1"
+  name: "fc1"
+  type: INNER_PRODUCT
+  inner_product_param {
+    num_output: 6
+  }
+}
+layers {
+  bottom: "fc1"
+  top: "fc2"
+  name: "fc2"
+  type: INNER_PRODUCT
+  inner_product_param {
+    num_output: 8
+  }
+}
+layers {
+  bottom: "fc2"
+  top: "fc3"
+  name: "fc3"
+  type: INNER_PRODUCT
+  inner_product_param {
+    num_output: 2
+  }
+}
