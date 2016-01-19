@@ -5,6 +5,7 @@ import numpy as np
 import vigra
 import cPickle as pickle
 import scipy.sparse as sparse
+import os
 
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.tree import DecisionTreeClassifier
@@ -219,7 +220,27 @@ def tree_to_nn_params(tree, n_feats, str_01 = 1., str_12 = 1., str_23 = 1.):
     #assert weights_12.nnz() == n_inner, str(weights_01.nnz()) + " , " + str(n_inner)
     assert weights_23.nnz == n_leaf, str(weights_23.nnz) + " , " + str(n_leaf)
 
+    write_caffe_prototex('./../models/rfnet_test.prototex', [n_feats, n_inner, n_leaf, 2] )
+
     return (weights_01, weights_12, weights_23, biases_1, biases_2, biases_3)
+
+
+# write the prototex file for the given architecture
+def write_caffe_prototex(filename, nn_architecture):
+    with open(filename, 'w') as f:
+        net_name = os.path.split(filename)[1].split('.')[0]
+
+        f.write("name: " + "\"" + str(net_name) + "\"" + "\n" )
+        f.write("\n")
+
+        f.write("input: \"data\"" + "\n")
+        f.write("input_dim: 1" + "\n")
+        f.write("input_dim: " + str(nn_architecture[0]) + "\n")
+        f.write("input_dim: 1" + "\n")
+        f.write("input_dim: 1" + "\n")
+
+        # etc.
+
 
 
 def build_nn(nn_params):
