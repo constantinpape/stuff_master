@@ -23,7 +23,7 @@ def get_target(ds_str = "sopnetcompare_train"):
     assert ds_str in ("sopnetcompare_train",), ds_str # TODO more datasets!!!
     print "Loading Features and Labels for:", ds_str
 
-    labelpath = '/home/constantin/Work/data_ssd/data_110915/sopnet_comparison/facelabs/facelabs_mitooff.h5'
+    labelpath = '/home/constantin/Work/data_hdd/data_110915/sopnet_comparison/processed/facelabs/facelabs_mitooff.h5'
     ffeatpath = '/home/constantin/Work/data_hdd/cache/cached_datasets/sopnetcompare_train/features/ffeats/ffeat_bert_0_True.h5'
 
     feats = np.nan_to_num( vigra.readHDF5(ffeatpath, 'data') )

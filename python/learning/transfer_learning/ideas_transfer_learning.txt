@@ -1,0 +1,30 @@
+Some ideas for transfer learning, using RFs and MLPs:
+
+Baselines:
+- RF: 
+-- Train Source Only, Predict Target
+-- Train Target Only, Predict Target
+-- Train Source + Target, Predict Target + potential balancing, weighting, noising
+-> see transfer_learning_rf.py
+
+- MLP:
+-- Train Source Only, Predict Target
+-- Train Target Only, Predict Target
+-- Train Source, Finetune on Target
+-> see transfer_learning_nn.py
+
+Advanced:
+
+- RF to NN:
+-- Train RF on Source, cast to MLP and finetune on Target
+-> see Welbl, "Casting Random Forests as Artificial Neural Networks"
+
+- Transfer Learning for RF:
+-- Use Transformations of RF trained on Source to refine on Target
+-> See Segev et al., "Learn on Source, Refine on Target: ..."
+
+-- Use Feature Importance from RF learned on Source as prior for feature splits when building Target
+-> See Rodner et al., "learning with Few Examples by Transferring Feature Relevance"
+
+-- ...
+

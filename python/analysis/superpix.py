@@ -244,9 +244,43 @@ def make_superpix_bock():
     volumina_n_layer( [raw, probs, segmentation.astype(np.uint32)] )
 
 
+def make_superpix_from_intepolation(prob_path, prob_key, save_path, anisotropy):
+    from wsDtSegmentation import wsDtSegmentation
+
+    pmem = vigra.readHDF5(prob_path, prob_key)
+
+    print pmem.shape
+    print anisotropy
+
+    # for some datasets, we have to invert the probabilities
+    #probs = 1. - probs
+
+    # interpolate the probability in z - direction
+    print "doing spline interpolation"
+    pmem_interpol = vigra.sampling.resize(pmem, shape=(pmem.shape[0], pmem.shape[1], anisotropy* pmem.shape[2]))
+    pmem_interpol = np.array(pmem_interpol)
+    print "Finished interpolation"
+
+    superpix = wsDtSegmentation(pmem_interpol, 0.45, 20, 100, 1.6, 2.)[0]
+
+    superpix = superpix[:,:,::anisotropy]
+
+    #volumina_n_layer( [pmem, superpix.astype(np.uint32)] )
+
+    assert superpix.shape == pmem.shape
+
+    vigra.writeHDF5(superpix, save_path, "superpixel")
+
+
 
 if __name__ == '__main__':
-    make_superpix_bock()
+
+    make_superpix_from_intepolation("/home/constantin/Work/data_ssd/data_080515/pedunculus/pixel_probabilities/probs_final.h5",
+            "exported_data",
+            "/home/constantin/Work/data_ssd/data_080515/pedunculus/superpixel/watershed_dt_interpolated.h5",
+            9)
+
+    #make_superpix_bock()
     #make_superpix_pedunculus()
     #make_superpix_isbi2012()
     #make_superpix_isbi2013(False)
