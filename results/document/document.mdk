@@ -30,6 +30,10 @@ Logo          : True
 
 ## Groundtruth
 
+The corrected groundtruth can only be used for the train / validation
+split and the full dataset, because mapping to invcuts is very non-trivial.
+ 
+
 **8-Fold CV**
 
 | Edge - GT        | Train                                   || Test                                   ||
@@ -47,6 +51,8 @@ Logo          : True
 | Full Projection  | 0.99694 | 0.15336 | 0.99270 | 0.20067 |
 | Fuzzy Projection |         |         |         |         |
 | Manual Correction|         |         |         |         |
+
+**Results on Testset**
 
 
 ## Feature
