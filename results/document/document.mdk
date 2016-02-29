@@ -1,0 +1,54 @@
+Title         : Results for Nature
+Author        : Constantin Pape
+Logo          : True
+
+[TITLE]
+
+# SNEMI3D
+
+## Groundtruth 
+
+## Feature
+
+**Random Forest Results**
+
+|Input| 2d | 3d | anisotropic |
+|-----|---:|---:|------------:|
+|Raw  |    |    |             |
+|Prob.|    |    |             |
+
+**Multicut Results**
+
+## Superpixel
+
+## Weighting
+
+## Myelin
+
+
+# ISBI2012
+
+## Groundtruth
+
+**8-Fold CV**
+
+| Edge - GT        | Train                                   || Test                                   ||
+|                  | RI                 | VI                  | RI                 | VI                 |
+|------------------|-------------------:|--------------------:|-------------------:|-------------------:|
+| Full Projection  | 0.99457 pm 0.00162 | 0.18539 pm 0.021900 | 0.98939 pm 0.00619 | 0.16126 pm 0.06495 |
+| Fuzzy Projection |                    |                     |                    |                    |
+| Manual Correction|                    |                     |                    |                    |
+
+**Train/Validation Split**
+
+| Edge - GT        | Train            || Test             ||
+|                  | RI      | VI      | RI      | VI      |
+|------------------|--------:|--------:|--------:|--------:|
+| Full Projection  | 0.99694 | 0.15336 | 0.99270 | 0.20067 |
+| Fuzzy Projection |         |         |         |         |
+| Manual Correction|         |         |         |         |
+
+
+## Feature
+
+## Lifted Multicuts
