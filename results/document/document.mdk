@@ -6,16 +6,22 @@ Logo          : True
 
 # SNEMI3D
 
-## Groundtruth 
-
 ## Feature
 
 **Random Forest Results**
 
+Feature Abbreviations:
+
+* r: Edge features accumulated from filters on raw data
+* p: Edge features accumulated from filters on probability map
+* reg: Region features (only on raw data)
+* t:  Topological features (special 2d feature)
+
 |Input| 2d | 3d | anisotropic |
 |-----|---:|---:|------------:|
-|Raw  |    |    |             |
-|Prob.|    |    |             |
+|r    |    |    |             |
+|p    |    |    |             |
+|rp   |    |    |             |
 
 **Multicut Results**
 
@@ -28,31 +34,60 @@ Logo          : True
 
 # ISBI2012
 
+For the ISBI2012 data, all filters are calculated in 2d,
+because 3d calcualtion, also with anisotropy does not make sense due to the 
+large anisotropy and inexact registration.
+
 ## Groundtruth
 
-The corrected groundtruth can only be used for the train / validation
-split and the full dataset, because mapping to invcuts is very non-trivial.
- 
+When looking at the projection of the (dense) groundtruth to the edges,
+I have discovered several errors that were mostly introduced due to the thick ignore label.
+Hence, I have adopted a different projection method (by Thorsten), based on an estimate
+of the overlap for each edge between 0 and 1. Here 0 means no overlap in the groundtruth of the
+two segments connected by the edges at all and 1 means perfect overlap.
+This can then be thresholded to retrieve a projection. 
+In the first experiments, I compare the Multicut Results from these two projection methods.
+(With all features).
+For the fuzzy projection, I use the thresholds 0.4 for negative labels and 0.6 for positive labels.
 
 **8-Fold CV**
 
-| Edge - GT        | Train                                   || Test                                   ||
-|                  | RI                 | VI                  | RI                 | VI                 |
-|------------------|-------------------:|--------------------:|-------------------:|-------------------:|
-| Full Projection  | 0.99457 pm 0.00162 | 0.18539 pm 0.021900 | 0.98939 pm 0.00619 | 0.16126 pm 0.06495 |
-| Fuzzy Projection |                    |                     |                    |                    |
-| Manual Correction|                    |                     |                    |                    |
+| Projection Method| Full               | Fuzzy              |
+|------------------|:-------------------|:-------------------|
+| Train:           |                    |                    |
+| RI               | 0.99518 pm 0.00225 | 0.98720 pm 0.00288 |
+| VI               | 0.15402 pm 0.03615 | 0.32984 pm 0.03586 |
+| Fscore           | 0.94983 pm 0.02058 | 0.87915 pm 0.02323 |
+| Test:            |                    |                    |
+| RI               | 0.99167 pm 0.00208 | 0.97820 pm 0.03586 |
+| VI               | 0.14208 pm 0.06337 | 0.24781 pm 0.09320 |
+| Fscore           | 0.96487 pm 0.02142 | 0.91419 pm 0.04208 |
+
 
 **Train/Validation Split**
 
-| Edge - GT        | Train            || Test             ||
-|                  | RI      | VI      | RI      | VI      |
-|------------------|--------:|--------:|--------:|--------:|
-| Full Projection  | 0.99694 | 0.15336 | 0.99270 | 0.20067 |
-| Fuzzy Projection |         |         |         |         |
-| Manual Correction|         |         |         |         |
+| Projection Method| Full    | Fuzzy   |
+|------------------|:--------|:--------|
+| Train:           |         |         |
+| RI               | 0.99686 | 0.99210 |
+| VI               | 0.15402 | 0.31702 |
+| Fscore           | 0.95594 | 0.89574 |
+| Test:            |         |         |
+| RI               | 0.99213 | 0.99110 |
+| VI               | 0.20944 | 0.28347 |
+| Fscore           | 0.92535 | 0.91710 |
 
 **Results on Testset**
+
+| Projection Method| Full | Fuzzy |
+|------------------|-----:|------:|
+| Train:           |      |       |
+| RI               |      |       |
+| VI               |      |       |
+| Fscore           |      |       |
+| Test:            |      |       |
+| RandScore        |      |       |
+| VIScore          |      |       |
 
 
 ## Feature
