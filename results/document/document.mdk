@@ -17,11 +17,12 @@ Feature Abbreviations:
 * reg: Region features (only on raw data)
 * t:  Topological features (special 2d feature)
 
-|Input| 2d | 3d | anisotropic |
-|-----|---:|---:|------------:|
-|r    |    |    |             |
-|p    |    |    |             |
-|rp   |    |    |             |
+|Input| 2d       || 3d        || anisotropic          ||
+|     |Train|Test |Train |Test |Train  | Test          |
+|-----|:----|:----|:-----|:----|:------|:--------------|
+|r    |     |     |      |     |100    | 87.28 pm 1.05 |
+|p    |     |     |      |     |100    | 92.72 pm 1.24 |
+|rp   |     |     |      |     |100    | 92.74 pm 1.19 |
 
 **Multicut Results**
 
