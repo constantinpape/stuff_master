@@ -19,12 +19,18 @@ Feature Abbreviations:
 * reg: Region features (only on raw data)
 * t:  Topological features (special 2d feature)
 
-|Input| 2d                 || 3d        || anisotropic          ||
-|     |Train|Test           |Train |Test |Train  | Test          |
-|-----|:----|:--------------|:-----|:----|:------|:--------------|
-|r    | 100 | 88.21 pm 1.17 |      |     |100    | 87.28 pm 1.05 |
-|p    | 100 | 92.41 pm 1.16 |      |     |100    | 92.72 pm 1.24 |
-|rp   |     |               |      |     |100    | 92.74 pm 1.19 |
+|Input  | 2d                 || 3d                  || anisotropic          ||
+|       |Train|Test           |Train |Test           |Train  | Test          |
+|-------|:----|:--------------|:-----|:--------------|:------|:--------------|
+|r      | 100 | 88.21 pm 1.17 | 100  | 85.57 pm 1.10 |100    | 87.28 pm 1.05 |
+|p      | 100 | 92.41 pm 1.16 | 100  | 91.70 pm 1.20 |100    | 92.72 pm 1.24 |
+|rp     | 100 | 92.60 pm 1.12 | 100  | 91.85 pm 1.18 |100    | 92.74 pm 1.19 |
+|reg    | -   | -             | -    | -             |       |               |
+|t      | -   | -             | -    | -             |       |               |
+|rpreg  | -   | -             | -    | -             |       |               |
+|preg   | -   | -             | -    | -             |       |               |
+|rpregt | -   | -             | -    | -             |       |               |
+|pregt  | -   | -             | -    | -             |       |               |
 
 **Multicut Results**
 
@@ -96,3 +102,6 @@ For the fuzzy projection, I use the thresholds 0.4 for negative labels and 0.6 f
 ## Feature
 
 ## Lifted Multicuts
+
+
+# Neuroproof
