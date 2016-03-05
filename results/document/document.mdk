@@ -95,17 +95,18 @@ Evaluation with Leader Board Error Measures.
 Crossvalidation with 500 trees, learning from full gt projected labels.
 All filters calcualted in 2d.
 
-|Input  |Train          |Test           |
-|-------|:--------------|:--------------|
-|r      | 100           | 92.55 pm 0.97 |
-|p      | 100           | 93.21 pm 0.81 |
-|rp     | 100           | 93.30 pm 0.75 |
-|reg    | 100           | 86.72 pm 1.37 |
-|t      | 85.21 pm 0.01 | 85.09 pm 0.10 |
-|rpreg  | 100           | 93.72 pm 0.08 |
-|preg   | 100           | 93.72 pm 0.06 |
-|rpregt | 100           | 93.65 pm 0.07 |
-|pregt  | 100           | 93.85 pm 0.06 |
+|Input  | Full                         || Fuzzy                        ||
+|       | Train         | Test          | Train         | Test          |
+|-------|:--------------|:--------------|:--------------|:--------------|
+|r      | 100           | 92.55 pm 0.97 | 100           | 92.50 pm 1.0  |
+|p      | 100           | 93.21 pm 0.81 | 100           | 93.17 pm 0.81 |
+|rp     | 100           | 93.30 pm 0.75 | 100           | 93.21 pm 0.66 |
+|reg    | 100           | 86.72 pm 1.37 | 100           | 86.79 pm 1.12 |
+|t      | 85.21 pm 0.10 | 85.09 pm 1.00 | 85.21 pm 0.10 | 85.07 pm 0.98 |
+|rpreg  | 100           | 93.72 pm 0.80 | 100           | 93.70 pm 0.76 |
+|preg   | 100           | 93.72 pm 0.62 | 100           | 93.86 pm 0.64 |
+|rpregt | 100           | 93.65 pm 0.73 | 100           | 93.74 pm 0.67 |
+|pregt  | 100           | 93.85 pm 0.61 | 100           | 93.79 pm 0.60 |
 
 
 ## Lifted Multicuts
