@@ -59,47 +59,54 @@ In the first experiments, I compare the Multicut Results from these two projecti
 (With all features).
 For the fuzzy projection, I use the thresholds 0.4 for negative labels and 0.6 for positive labels.
 
-**8-Fold CV**
+Experiments with all features and 1000 Trees.
 
-| Projection Method| Full               | Fuzzy              |
-|------------------|:-------------------|:-------------------|
-| Train:           |                    |                    |
-| RI               | 0.99518 pm 0.00225 | 0.98720 pm 0.00288 |
-| VI               | 0.15402 pm 0.03615 | 0.32984 pm 0.03586 |
-| Fscore           | 0.94983 pm 0.02058 | 0.87915 pm 0.02323 |
-| Test:            |                    |                    |
-| RI               | 0.99167 pm 0.00208 | 0.97820 pm 0.03586 |
-| VI               | 0.14208 pm 0.06337 | 0.24781 pm 0.09320 |
-| Fscore           | 0.96487 pm 0.02142 | 0.91419 pm 0.04208 |
-
+Evaluation with Leader Board Error Measures.
 
 **Train/Validation Split**
 
-| Projection Method| Full    | Fuzzy   |
-|------------------|:--------|:--------|
-| Train:           |         |         |
-| RI               | 0.99686 | 0.99210 |
-| VI               | 0.15402 | 0.31702 |
-| Fscore           | 0.95594 | 0.89574 |
-| Test:            |         |         |
-| RI               | 0.99213 | 0.99110 |
-| VI               | 0.20944 | 0.28347 |
-| Fscore           | 0.92535 | 0.91710 |
+**dn to up**: Train on lower 15 slices, test on upper 15 slices
+
+**up to dn**: Train on upper 15 slices, test on lower 15 slices
+
+| Projection Method| Full               || Fuzzy              ||
+|                  | dn to up | up to dn | dn to up | up to dn |
+|------------------|:---------|:---------|:---------|:---------|
+| Train:           |          |          |          |          |
+| RI-Score         | 0.98575  | 0.98544  | 0.98265  | 0.98548  |
+| VI-Score         | 0.99057  | 0.99013  | 0.99082  | 0.99141  |
+| Test:            |          |          |          |          |
+| RI-Score         | 0.98446  | 0.97841  | 0.97665  | 0.97813  |
+| VI-Score         | 0.98827  | 0.98700  | 0.98764  | 0.98716  |
 
 **Results on Testset**
 
-| Projection Method| Full | Fuzzy |
-|------------------|-----:|------:|
-| Train:           |      |       |
-| RI               |      |       |
-| VI               |      |       |
-| Fscore           |      |       |
-| Test:            |      |       |
-| RandScore        |      |       |
-| VIScore          |      |       |
-
+| Projection Method| Full    | Fuzzy   |
+|------------------|--------:|--------:|
+| Train:           |         |         |
+| RI-Score         | 0.99193 | 0.98500 |
+| VI-Score         | 0.99157 | 0.99152 |
+| Test:            |         |         |
+| RI-Score         |         |         |
+| VI-Score         |         |         |
 
 ## Feature
+
+Crossvalidation with 500 trees, learning from full gt projected labels.
+All filters calcualted in 2d.
+
+|Input  |Train          |Test           |
+|-------|:--------------|:--------------|
+|r      | 100           | 92.55 pm 0.97 |
+|p      | 100           | 93.21 pm 0.81 |
+|rp     | 100           | 93.30 pm 0.75 |
+|reg    | 100           | 86.72 pm 1.37 |
+|t      | 85.21 pm 0.01 | 85.09 pm 0.10 |
+|rpreg  | 100           | 93.72 pm 0.08 |
+|preg   | 100           | 93.72 pm 0.06 |
+|rpregt | 100           | 93.65 pm 0.07 |
+|pregt  | 100           | 93.85 pm 0.06 |
+
 
 ## Lifted Multicuts
 
