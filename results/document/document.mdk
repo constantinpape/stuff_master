@@ -19,22 +19,51 @@ Feature Abbreviations:
 * reg: Region features (only on raw data)
 * t:  Topological features (special 2d feature)
 
-|Input  | 2d                 || 3d                  || anisotropic                 ||
-|       |Train|Test           |Train |Test           |Train         | Test          |
-|-------|:----|:--------------|:-----|:--------------|:-------------|:--------------|
-|r      | 100 | 88.21 pm 1.17 | 100  | 85.57 pm 1.10 |100           | 87.28 pm 1.05 |
-|p      | 100 | 92.41 pm 1.16 | 100  | 91.70 pm 1.20 |100           | 92.72 pm 1.24 |
-|rp     | 100 | 92.60 pm 1.12 | 100  | 91.85 pm 1.18 |100           | 92.74 pm 1.19 |
-|reg    | -   | -             | -    | -             |100           | 86.17 pm 0.45 |
-|t      | -   | -             | -    | -             |90.38 pm 0.04 | 81.75 pm 0.80 |
-|rpreg  | -   | -             | -    | -             |100           | 93.90 pm 0.67 |
-|preg   | -   | -             | -    | -             |100           | 93.87 pm 0.65 |
-|rpregt | -   | -             | -    | -             |              |               |
-|pregt  | -   | -             | -    | -             |              |               |
+|Features | 2d                 || 3d                  || anisotropic                 ||
+|         |Train|Test           |Train |Test           |Train         | Test          |
+|---------|:----|:--------------|:-----|:--------------|:-------------|:--------------|
+|r        | 100 | 88.21 pm 1.17 | 100  | 85.57 pm 1.10 |100           | 87.28 pm 1.05 |
+|p        | 100 | 92.41 pm 1.16 | 100  | 91.70 pm 1.20 |100           | 92.72 pm 1.24 |
+|rp       | 100 | 92.60 pm 1.12 | 100  | 91.85 pm 1.18 |100           | 92.74 pm 1.19 |
+|reg      | -   | -             | -    | -             |100           | 86.17 pm 0.45 |
+|t        | -   | -             | -    | -             |90.38 pm 0.04 | 81.75 pm 0.80 |
+|rpreg    | -   | -             | -    | -             |100           | 93.90 pm 0.67 |
+|preg     | -   | -             | -    | -             |100           | 93.87 pm 0.65 |
+|rpregt   | -   | -             | -    | -             |              |               |
+|pregt    | -   | -             | -    | -             |              |               |
 
 **Multicut Results**
 
-## Superpixel
+Evaluation of some of the feature combinations from above with
+Multicut on train validation split (error by changing between train / test block).
+All with anisotropic filter calculation and 500 trees. 
+
+| Features  | Train   | Test    |
+|-----------|:--------|:--------|
+| **p**     |         |         |
+| RI        |         |         |
+| VI        |         |         |
+| FS        |         |         |
+| **rp**    |         |         |
+| RI        |         |         |
+| VI        |         |         |
+| FS        |         |         |
+|**rpreg**  |         |         |
+| RI        |         |         |
+| VI        |         |         |
+| FS        |         |         |
+|**rpregt** |         |         |
+| RI        |         |         |
+| VI        |         |         |
+| FS        |         |         |
+|**preg**   |         |         |
+| RI        |         |         |
+| VI        |         |         |
+| FS        |         |         |
+| **pregt** |         |         |
+| RI        |         |         |
+| VI        |         |         |
+| FS        |         |         |
 
 ## Weighting
 
@@ -65,19 +94,12 @@ Evaluation with Leader Board Error Measures.
 
 **Train/Validation Split**
 
-**dn to up**: Train on lower 15 slices, test on upper 15 slices
+| Projection Method| Full                                   || Fuzzy                                  ||
+|                  | Train              | Test               | Train              | Test               |
+|------------------|:-------------------|:-------------------|:-------------------|:-------------------|
+| RI-Score         | 0.98560 pm 0.00016 | 0.98144 pm 0.00302 | 0.98406 pm 0.00141 | 0.97739 pm 0.00074 |
+| VI-Score         | 0.99035 pm 0.00022 | 0.98764 pm 0.00063 | 0.99111 pm 0.00029 | 0.98740 pm 0.00024 |
 
-**up to dn**: Train on upper 15 slices, test on lower 15 slices
-
-| Projection Method| Full               || Fuzzy              ||
-|                  | dn to up | up to dn | dn to up | up to dn |
-|------------------|:---------|:---------|:---------|:---------|
-| Train:           |          |          |          |          |
-| RI-Score         | 0.98575  | 0.98544  | 0.98265  | 0.98548  |
-| VI-Score         | 0.99057  | 0.99013  | 0.99082  | 0.99141  |
-| Test:            |          |          |          |          |
-| RI-Score         | 0.98446  | 0.97841  | 0.97665  | 0.97813  |
-| VI-Score         | 0.98827  | 0.98700  | 0.98764  | 0.98716  |
 
 **Results on Testset**
 
@@ -107,6 +129,36 @@ All filters calcualted in 2d.
 |preg   | 100           | 93.72 pm 0.62 | 100           | 93.86 pm 0.64 |
 |rpregt | 100           | 93.65 pm 0.73 | 100           | 93.74 pm 0.67 |
 |pregt  | 100           | 93.85 pm 0.61 | 100           | 93.79 pm 0.60 |
+
+Train / Validation Splt
+
+|Input       | Full        || Fuzzy       ||
+|            | Train | Test | Train | Test |
+|------------|:------|:-----|:------|:-----|
+| **r**      |       |      |       |      |
+| RI-Score   |       |      |       |      |
+| VI-Score   |       |      |       |      |
+| **p**      |       |      |       |      |
+| RI-Score   |       |      |       |      |
+| VI-Score   |       |      |       |      |
+| **rp**     |       |      |       |      |
+| RI-Score   |       |      |       |      |
+| VI-Score   |       |      |       |      |
+| **rpreg**  |       |      |       |      |
+| RI-Score   |       |      |       |      |
+| VI-Score   |       |      |       |      |
+| **rpregt** |       |      |       |      |
+| RI-Score   |       |      |       |      |
+| VI-Score   |       |      |       |      |
+| **preg**   |       |      |       |      |
+| RI-Score   |       |      |       |      |
+| VI-Score   |       |      |       |      |
+| **pregt**  |       |      |       |      |
+| RI-Score   |       |      |       |      |
+| VI-Score   |       |      |       |      |
+
+
+## Weighting
 
 
 ## Lifted Multicuts
