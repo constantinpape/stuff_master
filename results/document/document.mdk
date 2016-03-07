@@ -1,0 +1,167 @@
+Title         : Results for Nature
+Author        : Constantin Pape
+Logo          : True
+
+[TITLE]
+
+# SNEMI3D
+
+## Feature
+
+**Random Forest Results**
+
+Results from 10fold crossvalidation with 500 trees.
+
+Feature Abbreviations:
+
+* r: Edge features accumulated from filters on raw data
+* p: Edge features accumulated from filters on probability map
+* reg: Region features (only on raw data)
+* t:  Topological features (special 2d feature)
+
+|Features | 2d                 || 3d                  || anisotropic                 ||
+|         |Train|Test           |Train |Test           |Train         | Test          |
+|---------|:----|:--------------|:-----|:--------------|:-------------|:--------------|
+|r        | 100 | 88.21 pm 1.17 | 100  | 85.57 pm 1.10 |100           | 87.28 pm 1.05 |
+|p        | 100 | 92.41 pm 1.16 | 100  | 91.70 pm 1.20 |100           | 92.72 pm 1.24 |
+|rp       | 100 | 92.60 pm 1.12 | 100  | 91.85 pm 1.18 |100           | 92.74 pm 1.19 |
+|reg      | -   | -             | -    | -             |100           | 86.17 pm 0.45 |
+|t        | -   | -             | -    | -             |90.38 pm 0.04 | 81.75 pm 0.80 |
+|rpreg    | -   | -             | -    | -             |100           | 93.90 pm 0.67 |
+|preg     | -   | -             | -    | -             |100           | 93.87 pm 0.65 |
+|rpregt   | -   | -             | -    | -             |              |               |
+|pregt    | -   | -             | -    | -             |              |               |
+
+**Multicut Results**
+
+Evaluation of some of the feature combinations from above with
+Multicut on train validation split (error by changing between train / test block).
+All with anisotropic filter calculation and 500 trees. 
+
+| Features  | Train   | Test    |
+|-----------|:--------|:--------|
+| **p**     |         |         |
+| RI        |         |         |
+| VI        |         |         |
+| FS        |         |         |
+| **rp**    |         |         |
+| RI        |         |         |
+| VI        |         |         |
+| FS        |         |         |
+|**rpreg**  |         |         |
+| RI        |         |         |
+| VI        |         |         |
+| FS        |         |         |
+|**rpregt** |         |         |
+| RI        |         |         |
+| VI        |         |         |
+| FS        |         |         |
+|**preg**   |         |         |
+| RI        |         |         |
+| VI        |         |         |
+| FS        |         |         |
+| **pregt** |         |         |
+| RI        |         |         |
+| VI        |         |         |
+| FS        |         |         |
+
+## Weighting
+
+## Myelin
+
+
+# ISBI2012
+
+For the ISBI2012 data, all filters are calculated in 2d,
+because 3d calcualtion, also with anisotropy does not make sense due to the 
+large anisotropy and inexact registration.
+
+## Groundtruth
+
+When looking at the projection of the (dense) groundtruth to the edges,
+I have discovered several errors that were mostly introduced due to the thick ignore label.
+Hence, I have adopted a different projection method (by Thorsten), based on an estimate
+of the overlap for each edge between 0 and 1. Here 0 means no overlap in the groundtruth of the
+two segments connected by the edges at all and 1 means perfect overlap.
+This can then be thresholded to retrieve a projection. 
+In the first experiments, I compare the Multicut Results from these two projection methods.
+(With all features).
+For the fuzzy projection, I use the thresholds 0.4 for negative labels and 0.6 for positive labels.
+
+Experiments with all features and 1000 Trees.
+
+Evaluation with Leader Board Error Measures.
+
+**Train/Validation Split**
+
+| Projection Method| Full                                   || Fuzzy                                  ||
+|                  | Train              | Test               | Train              | Test               |
+|------------------|:-------------------|:-------------------|:-------------------|:-------------------|
+| RI-Score         | 0.98560 pm 0.00016 | 0.98144 pm 0.00302 | 0.98406 pm 0.00141 | 0.97739 pm 0.00074 |
+| VI-Score         | 0.99035 pm 0.00022 | 0.98764 pm 0.00063 | 0.99111 pm 0.00029 | 0.98740 pm 0.00024 |
+
+
+**Results on Testset**
+
+| Projection Method| Full    | Fuzzy   |
+|------------------|--------:|--------:|
+| Train:           |         |         |
+| RI-Score         | 0.99193 | 0.98500 |
+| VI-Score         | 0.99157 | 0.99152 |
+| Test:            |         |         |
+| RI-Score         |         |         |
+| VI-Score         |         |         |
+
+## Feature
+
+Crossvalidation with 500 trees, learning from full gt projected labels.
+All filters calcualted in 2d.
+
+|Input  | Full                         || Fuzzy                        ||
+|       | Train         | Test          | Train         | Test          |
+|-------|:--------------|:--------------|:--------------|:--------------|
+|r      | 100           | 92.55 pm 0.97 | 100           | 92.50 pm 1.0  |
+|p      | 100           | 93.21 pm 0.81 | 100           | 93.17 pm 0.81 |
+|rp     | 100           | 93.30 pm 0.75 | 100           | 93.21 pm 0.66 |
+|reg    | 100           | 86.72 pm 1.37 | 100           | 86.79 pm 1.12 |
+|t      | 85.21 pm 0.10 | 85.09 pm 1.00 | 85.21 pm 0.10 | 85.07 pm 0.98 |
+|rpreg  | 100           | 93.72 pm 0.80 | 100           | 93.70 pm 0.76 |
+|preg   | 100           | 93.72 pm 0.62 | 100           | 93.86 pm 0.64 |
+|rpregt | 100           | 93.65 pm 0.73 | 100           | 93.74 pm 0.67 |
+|pregt  | 100           | 93.85 pm 0.61 | 100           | 93.79 pm 0.60 |
+
+Train / Validation Splt
+
+|Input       | Full        || Fuzzy       ||
+|            | Train | Test | Train | Test |
+|------------|:------|:-----|:------|:-----|
+| **r**      |       |      |       |      |
+| RI-Score   |       |      |       |      |
+| VI-Score   |       |      |       |      |
+| **p**      |       |      |       |      |
+| RI-Score   |       |      |       |      |
+| VI-Score   |       |      |       |      |
+| **rp**     |       |      |       |      |
+| RI-Score   |       |      |       |      |
+| VI-Score   |       |      |       |      |
+| **rpreg**  |       |      |       |      |
+| RI-Score   |       |      |       |      |
+| VI-Score   |       |      |       |      |
+| **rpregt** |       |      |       |      |
+| RI-Score   |       |      |       |      |
+| VI-Score   |       |      |       |      |
+| **preg**   |       |      |       |      |
+| RI-Score   |       |      |       |      |
+| VI-Score   |       |      |       |      |
+| **pregt**  |       |      |       |      |
+| RI-Score   |       |      |       |      |
+| VI-Score   |       |      |       |      |
+
+
+## Weighting
+
+
+## Lifted Multicuts
+
+
+# Neuroproof
