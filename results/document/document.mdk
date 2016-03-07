@@ -19,6 +19,7 @@ Feature Abbreviations:
 * reg: Region features (only on raw data)
 * t:  Topological features (special 2d feature)
 
+
 |Features | 2d                 || 3d                  || anisotropic                 ||
 |         |Train|Test           |Train |Test           |Train         | Test          |
 |---------|:----|:--------------|:-----|:--------------|:-------------|:--------------|
@@ -27,10 +28,12 @@ Feature Abbreviations:
 |rp       | 100 | 92.60 pm 1.12 | 100  | 91.85 pm 1.18 |100           | 92.74 pm 1.19 |
 |reg      | -   | -             | -    | -             |100           | 86.17 pm 0.45 |
 |t        | -   | -             | -    | -             |90.38 pm 0.04 | 81.75 pm 0.80 |
-|rpreg    | -   | -             | -    | -             |100           | 93.90 pm 0.67 |
+|rpreg    | -   | -             | -    | -             |100           | 93.90 pm 0.67 |        |     |               |      |               |              |               |
 |preg     | -   | -             | -    | -             |100           | 93.87 pm 0.65 |
-|rpregt   | -   | -             | -    | -             |              |               |
-|pregt    | -   | -             | -    | -             |              |               |
+|rpregt   | -   | -             | -    | -             |100           | 93.89 pm 0.67 |
+|pregt    | -   | -             | -    | -             |100           | 93.87 pm 0.67 |
+|rpt      | -   | -             | -    | -             |100           |         |
+|pt       | -   | -             | -    | -             |100           |          |
 
 **Multicut Results**
 
@@ -38,37 +41,94 @@ Evaluation of some of the feature combinations from above with
 Multicut on train validation split (error by changing between train / test block).
 All with anisotropic filter calculation and 500 trees. 
 
-| Features  | Train   | Test    |
-|-----------|:--------|:--------|
-| **p**     |         |         |
-| RI        |         |         |
-| VI        |         |         |
-| FS        |         |         |
-| **rp**    |         |         |
-| RI        |         |         |
-| VI        |         |         |
-| FS        |         |         |
-|**rpreg**  |         |         |
-| RI        |         |         |
-| VI        |         |         |
-| FS        |         |         |
-|**rpregt** |         |         |
-| RI        |         |         |
-| VI        |         |         |
-| FS        |         |         |
-|**preg**   |         |         |
-| RI        |         |         |
-| VI        |         |         |
-| FS        |         |         |
-| **pregt** |         |         |
-| RI        |         |         |
-| VI        |         |         |
-| FS        |         |         |
+| Features  | Train | Test |
+|-----------|:------|:-----|
+| **p**     |       |      |
+| RI        |       |      |
+| VI        |       |      |
+| FS        |       |      |
+| **rp**    |       |      |
+| RI        |       |      |
+| VI        |       |      |
+| FS        |       |      |
+|**rpreg**  |       |      |
+| RI        |       |      |
+| VI        |       |      |
+| FS        |       |      |
+|**rpregt** |       |      |
+| RI        |       |      |
+| VI        |       |      |
+| FS        |       |      |
+|**preg**   |       |      |
+| RI        |       |      |
+| VI        |       |      |
+| FS        |       |      |
+| **pregt** |       |      |
+| RI        |       |      |
+| VI        |       |      |
+| FS        |       |      |
+| **rpt**   |       |      |
+| RI        |       |      |
+| VI        |       |      |
+| FS        |       |      |
+| **pt**    |       |      |
+| RI        |       |      |
+| VI        |       |      |
+| FS        |       |      |
+
 
 ## Weighting
 
-## Myelin
+**Results on train / val split**
 
+## Myelin and Weighting
+
+Compare superpixel with and without correction for myelin.
+
+Also compare different weighting procedures for the edge weights:
+
+* None: No weighting
+* z: Weighting only z-edges with their size
+* xyz: Weighting all edges with their size (w/ max size individually for xy and z)
+* all: Weighting all edges with their size (w/ max size of all edges)
+
+All Experiments with 1000 trees and all features.
+
+**Results on tran / val split**
+
+| Features | w/o Myelin correction  || w/ Myelin correction ||
+|          | Train      | Test       | Train     | Test      |
+|----------|-----------:|-----------:|----------:|----------:|
+| **none** |            |            |           |           |
+| RI       |            |            |           |           |
+| VI       |            |            |           |           |
+| FS       |            |            |           |           |
+| **z**    |            |            |           |           |
+| RI       |            |            |           |           |
+| VI       |            |            |           |           |
+| FS       |            |            |           |           |
+|**xyz**   |            |            |           |           |
+| RI       |            |            |           |           |
+| VI       |            |            |           |           |
+| FS       |            |            |           |           |
+
+**Results on train / test blocks**
+
+| Features | w/o Myelin correction  || w/ Myelin correction ||
+|          | Train      | Test       | Train     | Test      |
+|----------|-----------:|-----------:|----------:|----------:|
+| **none** |            |            |           |           |
+| RI       |            |            |           |           |
+| VI       |            |            |           |           |
+| FS       |            |            |           |           |
+| **z**    |            |            |           |           |
+| RI       |            |            |           |           |
+| VI       |            |            |           |           |
+| FS       |            |            |           |           |
+|**xyz**   |            |            |           |           |
+| RI       |            |            |           |           |
+| VI       |            |            |           |           |
+| FS       |            |            |           |           |
 
 # ISBI2012
 
@@ -88,29 +148,8 @@ In the first experiments, I compare the Multicut Results from these two projecti
 (With all features).
 For the fuzzy projection, I use the thresholds 0.4 for negative labels and 0.6 for positive labels.
 
-Experiments with all features and 1000 Trees.
-
-Evaluation with Leader Board Error Measures.
-
-**Train/Validation Split**
-
-| Projection Method| Full                                   || Fuzzy                                  ||
-|                  | Train              | Test               | Train              | Test               |
-|------------------|:-------------------|:-------------------|:-------------------|:-------------------|
-| RI-Score         | 0.98560 pm 0.00016 | 0.98144 pm 0.00302 | 0.98406 pm 0.00141 | 0.97739 pm 0.00074 |
-| VI-Score         | 0.99035 pm 0.00022 | 0.98764 pm 0.00063 | 0.99111 pm 0.00029 | 0.98740 pm 0.00024 |
-
-
-**Results on Testset**
-
-| Projection Method| Full    | Fuzzy   |
-|------------------|--------:|--------:|
-| Train:           |         |         |
-| RI-Score         | 0.99193 | 0.98500 |
-| VI-Score         | 0.99157 | 0.99152 |
-| Test:            |         |         |
-| RI-Score         |         |         |
-| VI-Score         |         |         |
+For all following evaluations, both GT projections are compared.
+All evaluations with Leader Board Error Measures.
 
 ## Feature
 
@@ -129,36 +168,95 @@ All filters calcualted in 2d.
 |preg   | 100           | 93.72 pm 0.62 | 100           | 93.86 pm 0.64 |
 |rpregt | 100           | 93.65 pm 0.73 | 100           | 93.74 pm 0.67 |
 |pregt  | 100           | 93.85 pm 0.61 | 100           | 93.79 pm 0.60 |
+|prt    | 100           | 95.65 pm 0.79 | 100           | 93.24 pm 0.72 |
+|pt     | 100           | 95.53 pm 0.86 | 100           | 93.29 pm 0.79 |
 
-Train / Validation Splt
+Something with prt and pt for gt_full is off...
 
-|Input       | Full        || Fuzzy       ||
-|            | Train | Test | Train | Test |
-|------------|:------|:-----|:------|:-----|
-| **r**      |       |      |       |      |
-| RI-Score   |       |      |       |      |
-| VI-Score   |       |      |       |      |
-| **p**      |       |      |       |      |
-| RI-Score   |       |      |       |      |
-| VI-Score   |       |      |       |      |
-| **rp**     |       |      |       |      |
-| RI-Score   |       |      |       |      |
-| VI-Score   |       |      |       |      |
-| **rpreg**  |       |      |       |      |
-| RI-Score   |       |      |       |      |
-| VI-Score   |       |      |       |      |
-| **rpregt** |       |      |       |      |
-| RI-Score   |       |      |       |      |
-| VI-Score   |       |      |       |      |
-| **preg**   |       |      |       |      |
-| RI-Score   |       |      |       |      |
-| VI-Score   |       |      |       |      |
-| **pregt**  |       |      |       |      |
-| RI-Score   |       |      |       |      |
-| VI-Score   |       |      |       |      |
+
+**Train / Validation Split**
+
+Experiments on train validation splits w/ 1000 trees.
+
+|Input       | Full                                    || Fuzzy                                    ||
+|            | Train              | Test                | Train               | Test                |
+|------------|:-------------------|:--------------------|:--------------------|:--------------------|
+| **r**      |                    |                     |                     |                     |
+| RI-Score   | 0.985942 pm 0.0021 | 0.97414 pm 0.00584  | -                   | -                   |
+| VI-Score   | 0.98942 pm 0.00022 | 0.98487 pm 0.00081  | -                   | -                   |
+| **p**      |                    |                     |                     |                     |
+| RI-Score   | 0.98803 pm 0.00202 | 0.98276 pm 0.00515  | 0.98477 pm 0.00007  | 0.97250 pm 0.00375  |
+| VI-Score   | 0.99061 pm 0.00052 | 0.98778 pm 0.00039  | 0.99138 pm 0.00028  | 0.98652 pm 0.00031  |
+| **rp**     |                    |                     |                     |                     |
+| RI-Score   | 0.986277 pm 000070 | 0.983683 pm 0.00443 | 0.98426 pm 0.00053  | 0.97392 pm 0.00030  |
+| VI-Score   | 0.99030 pm 0.00031 | 0.988362 pm 0.00095 | 0.991169 pm 0.00012 | 0.98678 pm 0.00094  |
+| **rpreg**  |                    |                     |                     |                     |
+| RI-Score   | 0.98555 pm 0.00017 | 0.98143 pm 0.00293  | 0.98453 pm 0.00083  | 0.97483 pm 0.00043  |
+| VI-Score   | 0.99030 pm 0.00031 | 0.98761 pm 0.00052  | 0.99122 pm 0.00043  | 0.98688 pm 0.00003  |
+| **rpregt** |                    |                     |                     |                     |
+| RI-Score   | 0.98560 pm 0.00016 | 0.98143 pm 0.00303  | 0.98407 pm 0.00141  | 0.977392 pm 0.00074 |
+| VI-Score   | 0.99036 pm 0.00022 | 0.98764 pm 0.00063  | 0.99112 pm 0.00030  | 0.987403 om 0.00024 |
+| **preg**   |                    |                     |                     |                     |
+| RI-Score   | 0.98575 pm 0.00028 | 0.98158 pm 0.00270  | 0.98507 pm 0.00012  | 0.97878 pm 0.00359  |
+| VI-Score   | 0.99029 pm 0.00019 | 0.98769 pm 0.00036  | 0.991168 pm 0.00016 | 0.98760 pm 0.00074  |
+| **pregt**  |                    |                     |                     |                     |
+| RI-Score   | 0.98577 pm 0.00021 | 0.98198 pm 0.00287  | 0.98507 pm 0.00067  | 0.97692 pm 0.00593  |
+| VI-Score   | 0.99034 pm 0.00028 | 0.98775 pm 0.00041  | 0.98737 pm 0.00008  | 0.98737 pm 0.00114  |
+| **rpt**    |                    |                     |                     |                     |
+| RI-Score   | 0.98633 pm 0.00073 | 0.98325 pm 0.00404  | 0.98377 pm 0.00139  | 0.97564 pm 0.00277  |
+| VI-Score   | 0.99033 pm 0.00026 | 0.98818 pm 0.00077  | 0.99110 pm 0.00323  | 0.98727 pm 0.00060  |
+| **pt**     |                    |                     |                     |                     |
+| RI-Score   | 0.98862 pm 0.00151 | 0.98198 pm 0.00306  | 0.98585 pm 0.00069  | 0.97489 pm 0.00069  |
+| VI-Score   | 0.99068 pm 0.00046 | 0.98757 pm 0.00011  | 0.99110 pm 0.00032  | 0.98708 pm 0.00022  |
 
 
 ## Weighting
+
+Compare different weighting procedures for the edge weights:
+
+* None: No weighting
+* z: Weighting only z-edges with their size
+* xyz: Weighting all edges with their size (w/ max size individually for xy and z)
+* all: Weighting all edges with their size (w/ max size of all edges)
+
+All Experiments with 1000 trees and all features.
+
+**Results on train / val split**
+
+| Projection Method| Full                                   || Fuzzy                                  ||
+|                  | Train              | Test               | Train              | Test               |
+|------------------|:-------------------|:-------------------|:-------------------|:-------------------|
+| None             |                    |                    |                    |                    |
+| RI-Score         | 0.98560 pm 0.00016 | 0.98143 pm 0.00303 | 0.98407 pm 0.00141 | 0.97739 pm 0.00074 |
+| VI-Score         | 0.99035 pm 0.00022 | 0.98764 pm 0.00063 | 0.99112 pm 0.00024 | 0.98740 pm 0.00024 |
+| z                |                    |                    |                    |                    |
+| RI-Score         | 0.99081 pm 0.00427 | 0.98467 pm 0.00558 | 0.99132 pm 0.00400 | 0.98576 pm 0.00434 |
+| VI-Score         | 0.99191 pm 0.00076 | 0.98881 pm 0.00142 | 0.99381 pm 0.00084 | 0.99035 pm 0.00084 |
+| xyz              |                    |                    |                    |                    |
+| RI-Score         | 0.99107 pm 0.00416 | 0.98934 pm 0.00345 | 0.99082 pm 0.00494 | 0.98687 pm 0.00494 |
+| VI-Score         | 0.99196 pm 0.00075 | 0.99007 pm 0.00137 | 0.99371 pm 0.00128 | 0.99082 pm 0.00170 |
+| all              |                    |                    |                    |                    |
+| RI-Score         | 0.72069 pm 0.05332 | 0.71675 pm 0.08842 | -                  | -                  |
+| VI-Score         | 0.91469 pm 0.01920 | 0.91073 pm 0.03028 | -                  | -                  |
+
+
+**Results on Testset**
+
+| Projection Method| Full          || Fuzzy         ||
+|                  | Train   | Test | Train   | Test |
+|------------------|:--------|:-----|:--------|:-----|
+| None:            |         |      |         |      |
+| RI-Score         | 0.99193 |      | 0.98500 |      |
+| VI-Score         | 0.99157 |      | 0.99152 |      |
+| z:               |         |      |         |      |
+| RI-Score         | 0.99089 |      | 0.99112 |      |
+| VI-Score         | 0.99190 |      | 0.99375 |      |
+| xyz:             |         |      |         |      |
+| RI-Score         | 0.99352 |      | 0.99161 |      |
+| VI-Score         | 0.99232 |      | 0.99394 |      |
+| all:             |         |      |         |      |
+| RI-Score         | -       | -    | -       | -    |
+| VI-Score         | -       | -    | -       | -    |
 
 
 ## Lifted Multicuts
