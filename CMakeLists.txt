@@ -1,10 +1,14 @@
 cmake_minimum_required(VERSION 2.8.3)
+
 FIND_PACKAGE(PythonInterp)
 FIND_PACKAGE(PythonLibs)
 FIND_PACKAGE(Boost COMPONENTS python)
 
+SET(CMAKE_CXX_FLAGS "-std=c++0x")
+
 ENABLE_TESTING()
 INCLUDE_DIRECTORIES(${Boost_INCLUDE_DIRS} ${PYTHON_INCLUDE_DIRS})
+INCLUDE_DIRECTORIES(../software/inst/include)
 LINK_LIBRARIES(${Boost_LIBRARIES} ${PYTHON_LIBRARIES}) # Deprecated but so convenient!
 
 ADD_SUBDIRECTORY(c++)
