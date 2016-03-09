@@ -28,58 +28,12 @@ Feature Abbreviations:
 |rp       | 100 | 92.60 pm 1.12 | 100  | 91.85 pm 1.18 |100           | 92.74 pm 1.19 |
 |reg      | -   | -             | -    | -             |100           | 86.17 pm 0.45 |
 |t        | -   | -             | -    | -             |90.38 pm 0.04 | 81.75 pm 0.80 |
-|rpreg    | -   | -             | -    | -             |100           | 93.90 pm 0.67 |        |     |               |      |               |              |               |
+|rpreg    | -   | -             | -    | -             |100           | 93.90 pm 0.67 |
 |preg     | -   | -             | -    | -             |100           | 93.87 pm 0.65 |
 |rpregt   | -   | -             | -    | -             |100           | 93.89 pm 0.67 |
 |pregt    | -   | -             | -    | -             |100           | 93.87 pm 0.67 |
-|rpt      | -   | -             | -    | -             |100           |         |
-|pt       | -   | -             | -    | -             |100           |          |
-
-**Multicut Results**
-
-Evaluation of some of the feature combinations from above with
-Multicut on train validation split (error by changing between train / test block).
-All with anisotropic filter calculation and 500 trees. 
-
-| Features  | Train | Test |
-|-----------|:------|:-----|
-| **p**     |       |      |
-| RI        |       |      |
-| VI        |       |      |
-| FS        |       |      |
-| **rp**    |       |      |
-| RI        |       |      |
-| VI        |       |      |
-| FS        |       |      |
-|**rpreg**  |       |      |
-| RI        |       |      |
-| VI        |       |      |
-| FS        |       |      |
-|**rpregt** |       |      |
-| RI        |       |      |
-| VI        |       |      |
-| FS        |       |      |
-|**preg**   |       |      |
-| RI        |       |      |
-| VI        |       |      |
-| FS        |       |      |
-| **pregt** |       |      |
-| RI        |       |      |
-| VI        |       |      |
-| FS        |       |      |
-| **rpt**   |       |      |
-| RI        |       |      |
-| VI        |       |      |
-| FS        |       |      |
-| **pt**    |       |      |
-| RI        |       |      |
-| VI        |       |      |
-| FS        |       |      |
-
-
-## Weighting
-
-**Results on train / val split**
+|rpt      | -   | -             | -    | -             |100           | 92.93 pm 1.15 |
+|pt       | -   | -             | -    | -             |100           | 92.90 pm 1.16 |
 
 ## Myelin and Weighting
 
@@ -94,41 +48,23 @@ Also compare different weighting procedures for the edge weights:
 
 All Experiments with 1000 trees and all features.
 
-**Results on tran / val split**
-
-| Features | w/o Myelin correction  || w/ Myelin correction ||
-|          | Train      | Test       | Train     | Test      |
-|----------|-----------:|-----------:|----------:|----------:|
-| **none** |            |            |           |           |
-| RI       |            |            |           |           |
-| VI       |            |            |           |           |
-| FS       |            |            |           |           |
-| **z**    |            |            |           |           |
-| RI       |            |            |           |           |
-| VI       |            |            |           |           |
-| FS       |            |            |           |           |
-|**xyz**   |            |            |           |           |
-| RI       |            |            |           |           |
-| VI       |            |            |           |           |
-| FS       |            |            |           |           |
-
 **Results on train / test blocks**
 
 | Features | w/o Myelin correction  || w/ Myelin correction ||
 |          | Train      | Test       | Train     | Test      |
 |----------|-----------:|-----------:|----------:|----------:|
 | **none** |            |            |           |           |
-| RI       |            |            |           |           |
-| VI       |            |            |           |           |
-| FS       |            |            |           |           |
+| RI       | 0.99820    |            | 0.99833   |           |
+| VI       | 0.62117    |            | 0.57268   |           |
+| FS       | 0.93483    |            | 0.94007   |           |
 | **z**    |            |            |           |           |
-| RI       |            |            |           |           |
-| VI       |            |            |           |           |
-| FS       |            |            |           |           |
+| RI       | 0.99820    |            | 0.99833   |           |
+| VI       | 0.62143    |            | 0.57264   |           |
+| FS       | 0.93483    |            | 0.94007   |           |
 |**xyz**   |            |            |           |           |
-| RI       |            |            |           |           |
-| VI       |            |            |           |           |
-| FS       |            |            |           |           |
+| RI       | 0.99820    |            | 0.99833   |           |
+| VI       | 0.62136    |            | 0.57268   |           |
+| FS       | 0.93483    |            | 0.94007   |           |
 
 # ISBI2012
 
@@ -168,10 +104,10 @@ All filters calcualted in 2d.
 |preg   | 100           | 93.72 pm 0.62 | 100           | 93.86 pm 0.64 |
 |rpregt | 100           | 93.65 pm 0.73 | 100           | 93.74 pm 0.67 |
 |pregt  | 100           | 93.85 pm 0.61 | 100           | 93.79 pm 0.60 |
-|prt    | 100           | 95.65 pm 0.79 | 100           | 93.24 pm 0.72 |
+|rpt    | 100           | 95.65 pm 0.79 | 100           | 93.24 pm 0.72 |
 |pt     | 100           | 95.53 pm 0.86 | 100           | 93.29 pm 0.79 |
 
-Something with prt and pt for gt_full is off...
+Something with rpt and pt for gt_full is off...
 
 
 **Train / Validation Split**
