@@ -178,6 +178,7 @@ All Experiments with 1000 trees and all features.
 
 **Results on Testset**
 
+All feats
 | Projection Method| Full          || Fuzzy         ||
 |                  | Train   | Test | Train   | Test |
 |------------------|:--------|:-----|:--------|:-----|
@@ -194,6 +195,22 @@ All Experiments with 1000 trees and all features.
 | RI-Score         | -       | -    | -       | -    |
 | VI-Score         | -       | -    | -       | -    |
 
+Prob feats
+| Projection Method| Full        || Fuzzy         ||
+|                  | Train | Test | Train   | Test |
+|------------------|:------|:-----|:--------|:-----|
+| None:            |       |      |         |      |
+| RI-Score         |       |      | 0.98500 |      |
+| VI-Score         |       |      | 0.99147 |      |
+| z:               |       |      |         |      |
+| RI-Score         |       |      | 0.99133 |      |
+| VI-Score         |       |      | 0.99373 |      |
+| xyz:             |       |      |         |      |
+| RI-Score         |       |      | 0.99227 |      |
+| VI-Score         |       |      | 0.99406 |      |
+| all:             |       |      |         |      |
+| RI-Score         | -     | -    | -       | -    |
+| VI-Score         | -     | -    | -       | -    |
 
 ## Lifted Multicuts
 
