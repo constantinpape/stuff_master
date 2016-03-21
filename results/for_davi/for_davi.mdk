@@ -1,0 +1,133 @@
+Title         : Automatation in CATMAID
+
+[TITLE]
+
+To get an impression on how to implement automatation
+in CATMAID, especially talking to Andrew, who already
+thought about this a lot due to CATSOP and Scott, who
+gave me a good perspective on the user side, was very 
+helpful.
+I have also met with Steve Plaza to discuss the Neuroproof / GALA algorithm.
+
+# Options for Automatic Reconstruction
+
+In the discussion with Andrew, it soon became clear, that we have 2 basic options 
+to incorporate automatic reconstruction:
+
+* **Closed Loop**
+* **End Result**
+
+In the **Closed Loop** setting, the automatic reconstruction runs in a supervised 
+fashion. The user sees the reconstruction results, corrects them,
+the reconstruction is rerun and the user again corrects the results.
+This cycle is iterated, until the user does not find any more errors.
+The final result can then be proofread.
+The whole process should probably be restricted to a subvolume, which can later
+be stitched with the surrounding.
+For this option, a low latency is needed, hence the reconstruction needs to
+be fast. However, the accuracy of the reconstruction is not of primal importance,
+because it can be corrected by the user.
+
+In the **End Result** setting, the reconstruction is run only once,
+harnessing the information from manual tracking in the (sub-) volume to process.
+This result can then be proofread. Additionaly it could be added as additional
+"layer" to tracing, where the user can merge nodes with the results from
+the automatic reconstruction. 
+In this setting, the accuracy of the reconstruction
+algorithm is the highest priority in order to limit the proofreading and correction time to
+a minimum. In contrast, the runtime is not as important, as the reconstruction does not
+run in a supervised fashion. It has to converge in a reasonable time (< 1 d ?!) though.
+
+Both approaches need a common infrastructure:
+
+* Accest to:
+  * Probability Maps
+  * Oversegmentation / Candidate Hypothesis
+  * Features 
+  * Training data
+* Leverage of information from manual traces
+  * Training data for learning  
+  * Constraints for the reconstruction algorithm
+* Integration of reconstruction result into CATMAID
+  * Dense segments to skeletons (for proofreading and integration into tracing)
+    * Introduction of a different node type for this ?
+  * Storage of the dense reconstruction
+
+Andrews current implementation of CATSOP follows the closed loop approach.
+He has already implemented some of the infrastructure mentioned above.
+Because sopnet is a candidate hypothesis based algorithm, he stores these 
+rather than an oversegmentation. But it should be relatively easy to use 
+adapt this to oversegmentations.
+
+We also came up with a roadmap for a End-Result Multicut implementation.
+
+
+# Algorithms for Automatic Reconstruction
+
+With the infrastructure mentioned above, different algorithms could be interchanged
+as backend for the reconstruction. This would allow for an 
+easy evaluation of different methods.
+
+Overview of algorithms:
+
+**Sopnet**: 
+
+* Based on candidate hypothesis
+* Solves assignment problem between slices
+* Weights for assignments learned with Structured SVM 
+* Fast and suited for **closed loop**
+* Issues with certain topologies and accuracy
+
+**Neuroproof / GALA**:
+
+* Based on oversegmentation
+* Reconstruction based on agglomeration of the oversegmentation
+* Weights for agglomeration learned with Random Forest
+* Relearning for different agglomeration steps
+* Quite accurate
+* Should be fast enough for **closed loop**
+
+**Multicut**
+
+* Based on oversegmentation
+* Solves global assignment problem
+* Weights learned with Random Forest
+* Very accurate
+* Scaling is still an open problem
+* At first, only deployable for **end result**
+
+For all these algorithms, the google probability maps could be used as 
+input (and will probably boost results).
+Also, the watershed on distance transform algorithm for generating oversegmentations
+(developed by Timo Prange from our group) yields good results in combination
+with these probability maps. It could be used for the oversegmentation based
+methods.
+
+In the remainder of my stay, I will try to gather some information on
+additional algorithms.
+
+
+# Mapping from skeletons to dense segments
+
+In the talk with Scott, he mentioned that already the automatic mapping from
+skeletons to dense segments would be a useful tool. As you have seen, I have 
+already done a proof of concept for this and will try it on more difficult data.
+The implementation of this approach in CATMAID would not be much additional effort 
+when implementing the infrastructure for automatic reconstruction.
+
+Furthermore, it might be useful in the context of proofreading the automatic segmentation.
+There, it could be used to automatically correct the dense segmentation, when the skeleton
+of the result was corrected.
+
+
+# Topology Evaluation for Proofreading
+
+Finally, in the talk with Scott, the idea came up that an automatic evaluation
+of the topology could be used to create a priority for proofreading. 
+This would be done by comparing different aspects of the skeletons topology to
+some predefined criteria or population averages.
+For this, also leveraging the information about the cell type would be helpful.
+Also, automatic classification of cell types might be interesting in this context.
+
+I know that Anna has some ideas on these topics, and I will talk to her after my return
+to Heidelberg about this.
