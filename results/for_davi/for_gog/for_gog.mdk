@@ -1,0 +1,43 @@
+Title         : Multicut Pipeline for Drosophila
+Author        : Constantin Pape
+Logo          : True
+
+[TITLE]
+
+I have worked on three cutouts from the 
+drosophila brain since last November.
+This is a preliminary summary of my issues and
+results so far. 
+
+# Multicut Pipeline
+
+All results are obtained with our pipeline for
+anisotropic data.
+I have developed this by adapting the existing pipeline for isotropic data in my master thesis.
+It proceeds as follows:
+
+* Oversegmentation 
+  * Watershed on distance transform of membrane probabilities
+  * This procedure can close holes in the probability maps and boosts our results (FIG!) 
+* Features for edges between the segments of this oversegmentation.
+  * Based on filters of inputs (raw data, probability maps), accumulated over the edges and mapped to features with different statistics
+  * Based on statistics of the segments, mapped to the corresponding edge
+  * Based on the topology of the edges
+  * Number features per edge: ~ 500
+* Training Random Forest on edges with these features 
+  * Labels either from groundtruth projection or manual labeling
+  * An edge gets labeled "0", if the two segments it joins belong to the same neurite and "1" otherwise
+  * Of course a clean train / test split is important later!
+* Multicut to obtain a consistent segmentation
+  * Edge weights derived from the Random Forest probabilities
+  * These weights are scaled by size of the edges to improve results
+
+When I started my experiments, ...
+
+## Speeding up the Pipeline
+
+## Blockwise Multicut
+
+# Results on the Groundtruth Cutout
+
+# Results on Cutouts
