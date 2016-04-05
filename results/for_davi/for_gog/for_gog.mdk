@@ -38,23 +38,27 @@ like structures are correctly merged by the multicut.
 ![overseg_xy]
 ![mc_seg_xy]
 
-[raw_xy]: images/raw_xy.png "raw_xy" { width:auto; max-width:30% }
-[overseg_xy]: images/overseg_xy.png "overseg_xy" { width:auto; max-width:30% }
-[mc_seg_xy]: images/mc_seg_xy.png "mc_seg_xy" { width:auto; max-width:30% }
+[raw_xy]: images/raw_xy.png "raw_xy" { width:auto; max-width:30%; max-height:50% }
+[overseg_xy]: images/overseg_xy.png "overseg_xy" { width:auto; max-width:30%; max-height:50% }
+[mc_seg_xy]: images/mc_seg_xy.png "mc_seg_xy" { width:auto; max-width:30%; max-height:50% }
 
-See examle of raw, oversegmentation and MC-result in yz - plane below.
+See examle of raw, oversegmentation and MC-result in xz - plane below.
 You can see the flat oversegmentation, that is stacked together. The multicut
 joins these to produce a consistent segmentation.
 
 ~ Center
-![raw_yz]
-![overseg_yz]
-![mcseg_yz]
+![raw_xz]
+![overseg_xz]
+![mcseg_xz]
 ~
 
-[raw_yz]: images/raw_yz.png "raw_yz" { width:auto; max-width:50% }
-[overseg_yz]: images/overseg_yz.png "overseg_yz" { width:auto; max-width:50% }
-[mcseg_yz]: images/mcseg_yz.png "mcseg_yz" { width:auto; max-width:50% }
+[mcseg_xz]: images/mcseg_xz.png "mcseg_xz" { width:auto; max-width:90% }
+
+[overseg_xz]: images/overseg_xz.png "overseg_xz" { width:auto; max-width:90% }
+
+[raw_xz]: images/raw_xz.png "raw_xz" { width:auto; max-width:90% }
+
+
 
 Both examples come from Sample A.
 For the watersheds, the google probability maps were used as input 
