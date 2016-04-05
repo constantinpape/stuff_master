@@ -4,39 +4,35 @@ Logo          : True
 
 [TITLE]
 
-I have worked on three cutouts from the 
-drosophila brain since last November.
-This is a preliminary summary of my issues and
-results so far. 
+I have worked on the Samples A, B and C from the drosophila brain since last November.
+This is a preliminary summary of my results so far and the issues I have encountered. 
 
 # Multicut Pipeline
 
-All results are obtained with our pipeline for
-anisotropic data.
-I have developed this by adapting the existing pipeline for isotropic data in my master thesis.
-It proceeds as follows:
+In my master thesis, I have adopted the existing multicut pipeline for isotropic
+data from out group to anisotropic data. This pipeline proceeds as follows:
 
 * Oversegmentation 
   * Watershed on distance transform of membrane probabilities
   * This procedure can close holes in the probability maps and boosts our results
-  * For anisotropic data, oversegmentation is produced in each slice individually and then stacked.
+  * For anisotropic data, the oversegmentation is produced in each slice individually and then stacked, because an extended oversegmentation introduces errors that cannot be fixed later.
 * Features for edges between the segments of this oversegmentation.
   * Based on filters of inputs (raw data, probability maps), accumulated over the edges and mapped to features with different statistics
   * Based on statistics of the segments, mapped to the corresponding edge.
   * Based on the topology of the edges.
-  * Number features per edge: ~ 500
-* Training Random Forest on edges with these features 
-  * Labels either from groundtruth projection or manual labeling.
+  * Number features per edge: > 500
+* Training Random Forest on edges with these features. 
+  * Labels either from projection of dense groundtruth or manual labeling.
   * An edge gets labeled "0", if the two segments it joins belong to the same neurite and "1" otherwise.
   * Train / Test split is important here.
-* Multicut to obtain a consistent segmentation
-  * Edge weights derived from the Random Forest probabilities.
+* Multicut to obtain a consistent segmentation.
+  * Edge weights calculated from the Random Forest probabilities.
   * These weights are scaled by the size of the corresponding edges to improve results.
 
-See example of raw, oversegmentation and Multicut result in xy-plane below.
+See example of raw, oversegmentation and multicut result in xy-plane below.
 Note, that regulary shaped neurites are filled by the oversegmentation
 completely in most of the cases. However, the small segments at channel
-like structures are correctly merged by the Multicut. 
+like structures are correctly merged by the multicut. 
 
 ![raw_xy]
 ![overseg_xy]
@@ -47,8 +43,8 @@ like structures are correctly merged by the Multicut.
 [mc_seg_xy]: images/mc_seg_xy.png "mc_seg_xy" { width:auto; max-width:30% }
 
 See examle of raw, oversegmentation and MC-result in yz - plane below.
-You can see the flat oversegmentation, that is stacked together and joined
-by the Multicut.
+You can see the flat oversegmentation, that is stacked together. The multicut
+joins these to produce a consistent segmentation.
 
 ~ Center
 ![raw_yz]
@@ -61,49 +57,51 @@ by the Multicut.
 [mcseg_yz]: images/mcseg_yz.png "mcseg_yz" { width:auto; max-width:50% }
 
 Both examples come from Sample A.
+For the watersheds, the google probability maps were used as input 
+and these were also used for inputs to feature calculation.
 
 When I started working with this data, I ran into two large issues:
 
-* The software pipeline I used at this point was to slow to process data of this size reasonably fast. 
+* The software pipeline I used at this point was too slow to process data of this size reasonably fast. 
 * The Multicut did not converge on the full blocks.
 
 ## Speeding up the Pipeline
 
 First I reimplemented the pipeline (focusing on feature calculation).
 The main reason for the poor performance of the old pipeline
-was due to legacy code, that performed a lot of slow I/O during feature calculation.
-The new implementation relies on vigra for all image processing and
-graph datastructures and opengm for solving the multicut problem and is implemented
+is due to legacy code, that performed a lot of slow I/O during feature calculation.
+The new implementation relies on vigra for the feature calculatin and
+graph datastructures and opengm for solving the multicut problem. It is implemented
 in python.
 
-Computation times for one of the 3k x 3k x 200 blocks.
+Computation times for one of the 3k x 3k x 200 blocks:
 
 |              | Building Graph | Calculating Features |
-|-------------:|---:            |---:                  |
+|:-------------|:---            |:---                  |
 | Old Pipeline | 24 hrs         | 6 days               |
 | New Pipeline | 20 mins        | 2 hrs                |
 
 
 ## Blockwise Multicut
 
-The Multicut problem is NP-hard. Hence convergence on larger problems is not guranteed
+The Multicut problem is NP-hard. Hence convergence on large problems is not guranteed
 in reasonable time.
 To overcome this issue for the data on hand, I have implemented a blockwise version of
 the multicut:
 
-* Solve Multicut on smaller overlapping subblocks.
+* Solve Multicut on smaller, overlapping subblocks.
   * (Used 8 for the data on hand) 
 * Intersect the solutions of these subproblems to obtain problem on the whole block.
   * This problem is a lot smaller than the initial global problem, because we have already solved the subproblems.
 * Solve this global problem with a final multicut.
 
 The last step can be seen as stitiching the results on the subblocks.
-Here, also a simpler stitching algorithm could be used.
+Here, also a simpler stitching technique could be used.
 
 
 # Results on the Groundtruth Cutout
 
-First, I have run test-experiments on the 1250 x 1250 x 125 cutout from Sample A 
+First, I have run experiments on the 1250 x 1250 x 125 cutout from Sample A 
 for which groundtruth is available.
 To evaluate the performance, I trained on the lower 50 slices and evaluated
 on the upper 75.
@@ -117,7 +115,7 @@ The results look promising and yield the following evaluation metrics:
 
 From my experience, the numbers on the train block correspond to very few
 errors, which are not relevant for the overall connectivity. The numbers
-on the Test Block correspond to 5 - 10 relevan
+on the test block correspond to 5 - 10 relevan
 t errors (false merges /
 splits of neurites) on a volume of this size.
 
@@ -132,7 +130,6 @@ For Sample A, B and C, so far I did the following experiments:
 * Solve blockwise multicut (8 subblocks).
 
 For Sample A, the blockwise multicut converged in about 2 hours.
-Note that it did not converge in reasonable time with a single multicut.
 
 I have uploaded the result, together with the corresponding raw data and the
 oversegmentation:
@@ -142,7 +139,7 @@ oversegmentation:
 For Sample B and C, the blockwise multicut takes about 1 week to converge
 (Unfortunately, I don't have the results now, because my calculations were
 killed, buy I can project to this runtime by the number of blocks, that were solved
-untul that happened).
+until that happened).
 
 Note, that this is not a fundemental scalling problem.
 The real issue here is, that the energies for the multicut problem for 
@@ -153,7 +150,7 @@ Hence it yields probabilities that are not well suited for these different looki
 I have some ideas how to tackle these issues:
 
 * Learning from Skeletons:
-  * I have skeleton groundtruth for all samples (from Eric)
+  * I have skeleton groundtruth for all samples (from Eric).
   * Can project skeletons to oversegmentation and generate training examples.
   * Maybe use transfer learning techniques to leverage information in the groundtruth cutout.
 * Parallelize the blockwise mulitcut
