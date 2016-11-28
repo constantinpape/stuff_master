@@ -22,7 +22,7 @@ def slicingToString(slicing):
 # the new file should already exist and have the labels added, but not drawn (if drawn they will be deleted)
 
 def transfer(labelfile, new_project_filepath):
-    labelimage = vigra.readHDF5(labelfile, "labels")
+    labelimage = vigra.readHDF5(labelfile, "exported_data")
     if len(labelimage.shape) != 4:
         labelimage = np.expand_dims( labelimage, axis = 3)
     #labelbinary = (labelimage>0).astype(np.uint8)
@@ -45,7 +45,6 @@ def transfer(labelfile, new_project_filepath):
 
 
 if __name__ == '__main__':
-    labelfile        = "/home/constantin/Work/data_ssd/data_090615/isbi2012/pixel_probabilities/labels.h5"
-    new_project_file = "/home/constantin/Work/data_ssd/data_090615/isbi2012/pixel_probabilities/multi_labeling_2d.ilp"
-
+    labelfile        = "/home/consti/Work/Neurocut/more_isbi_exp/binary_labs_squeezed.h5"
+    new_project_file = "/home/consti/Work/Neurocut/more_isbi_exp/ilastik_projects/binary_labeling_on_raw.ilp"
     transfer(labelfile, new_project_file)

@@ -73,9 +73,7 @@ def volumina_n_layer(data, labels = None):
 
 
 
-def streaming_n_layer(data, keys, layer_type, labels = None):
-    app = QApplication(sys.argv)
-
+def streaming_n_layer(files, keys, labels = None, block_shape = [100,100,100]):
     from volumina.api import Viewer
     from volumina.pixelpipeline.datasources import LazyflowSource
 
@@ -83,26 +81,31 @@ def streaming_n_layer(data, keys, layer_type, labels = None):
     from lazyflow.operators.ioOperators.opStreamingHdf5Reader import OpStreamingHdf5Reader
     from lazyflow.operators import OpCompressedCache
 
+    app = QApplication(sys.argv)
+
     v = Viewer()
 
-    v.title = "Streaming Viewer"
 
     graph = Graph()
 
     def mkH5source(fname, gname):
         h5file = h5py.File(fname)
+        dtype = h5file[gname].dtype
 
         source = OpStreamingHdf5Reader(graph=graph)
         source.Hdf5File.setValue(h5file)
         source.InternalPath.setValue(gname)
 
         op = OpCompressedCache( parent=None, graph=graph )
-        op.BlockShape.setValue( [100, 100, 100] )
+        op.BlockShape.setValue(block_shape )
         op.Input.connect( source.OutputImage )
 
-        return op.Output
+        return op.Output, dtype
 
-    for i, f in enumerate(data):
+    #rawSource = mkH5source(data[0], keys[0])
+    #v.addGrayscaleLayer(rawSource, name = 'raw')
+
+    for i, f in enumerate(files):
 
         if labels is not None:
             layer_name = labels[i]
@@ -111,14 +114,14 @@ def streaming_n_layer(data, keys, layer_type, labels = None):
 
         source, dtype = mkH5source(f, keys[i])
 
-        if layer_type[i] == "seg":
-            v.addRandomColorsLayer(source, name = layer_name)
-        else:
+        if np.dtype(dtype) in (np.dtype('uint8'), np.dtype('float32'), np.dtype('float64')):
             v.addGrayscaleLayer(source, name = layer_name)
+        else:
+            v.addRandomColorsLayer(source, name = layer_name)
 
+    v.setWindowTitle("Streaming Viewer")
     v.showMaximized()
     app.exec_()
-
 
 
 
