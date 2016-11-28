@@ -46,34 +46,80 @@ def volumina_double_layer(data, overlay):
 	app . exec_ ()
 
 # plot n data layers
-def volumina_n_layer(data):
+def volumina_n_layer(data, labels = None):
 
     app = QApplication (sys.argv)
+    import volumina
     from volumina.api import Viewer
 
     v = Viewer ()
     v.title = " Volumina Demo "
     v.showMaximized ()
 
-    ind = 0
-    for d in data:
+    for ind, d in enumerate(data):
     	layer_name = "layer_" + str(ind)
+        if labels is not None:
+            layer_name = labels[ind]
     	# get data type of the elements d, to determine
     	# if we use a grayscale overlay (float32) or a randomcolors overlay (uint) for labels
-    	mask = []
-    	for i in range( len(d.shape) ):
-    		mask.append(0)
-    	mask = tuple(mask)
-    	data_type = type(d[mask])
-    	print data_type
+    	data_type = d.dtype
 
     	if data_type is FloatType or data_type == np.float32 or data_type == np.float64:
     	    v.addGrayscaleLayer(d , name = layer_name)
     	else:
     	    v.addRandomColorsLayer(d.astype(np.uint32), name = layer_name)
-    	ind += 1
 
-    app . exec_ ()
+    app.exec_()
+
+
+
+def streaming_n_layer(data, keys, layer_type, labels = None):
+    app = QApplication(sys.argv)
+
+    from volumina.api import Viewer
+    from volumina.pixelpipeline.datasources import LazyflowSource
+
+    from lazyflow.graph import Graph
+    from lazyflow.operators.ioOperators.opStreamingHdf5Reader import OpStreamingHdf5Reader
+    from lazyflow.operators import OpCompressedCache
+
+    v = Viewer()
+
+    v.title = "Streaming Viewer"
+
+    graph = Graph()
+
+    def mkH5source(fname, gname):
+        h5file = h5py.File(fname)
+
+        source = OpStreamingHdf5Reader(graph=graph)
+        source.Hdf5File.setValue(h5file)
+        source.InternalPath.setValue(gname)
+
+        op = OpCompressedCache( parent=None, graph=graph )
+        op.BlockShape.setValue( [100, 100, 100] )
+        op.Input.connect( source.OutputImage )
+
+        return op.Output
+
+    for i, f in enumerate(data):
+
+        if labels is not None:
+            layer_name = labels[i]
+        else:
+            layer_name = "layer_%i" % (i)
+
+        source, dtype = mkH5source(f, keys[i])
+
+        if layer_type[i] == "seg":
+            v.addRandomColorsLayer(source, name = layer_name)
+        else:
+            v.addGrayscaleLayer(source, name = layer_name)
+
+    v.showMaximized()
+    app.exec_()
+
+
 
 
 if __name__ == '__main__':
