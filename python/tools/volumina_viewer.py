@@ -1,9 +1,11 @@
-import sys , h5py
-from PyQt4 . QtCore import QTimer ; from PyQt4 . QtGui import QApplication
+import sys
+from PyQt4.QtCore import QTimer
+from PyQt4.QtGui import QApplication, QColor
 
 import vigra
 import numpy as np
 import argparse
+import h5py
 
 from types import *
 
@@ -72,7 +74,45 @@ def volumina_n_layer(data, labels = None):
     app.exec_()
 
 
+# plot n data layers
+def volumina_flexible_layer(data, layer_types, labels = None):
 
+    assert len(layer_types) == len(data)
+
+    app = QApplication (sys.argv)
+    import volumina
+    from volumina.api import Viewer
+
+    v = Viewer ()
+    v.title = " Volumina Demo "
+    v.showMaximized ()
+
+    for i, d in enumerate(data):
+    	layer_name = "layer_" + str(i)
+        if labels is not None:
+            layer_name = labels[i]
+    	# get data type of the elements d, to determine
+    	# if we use a grayscale overlay (float32) or a randomcolors overlay (uint) for labels
+    	data_type = d.dtype
+
+        if layer_types[i] == 'Grayscale':
+    	    v.addGrayscaleLayer(d , name = layer_name)
+        elif layer_types[i] == 'RandomColors':
+    	    v.addRandomColorsLayer(d.astype(np.uint32), name = layer_name)
+        elif layer_types[i] == 'Red':
+    	    v.addAlphaModulatedLayer(d , name = layer_name, tintColor=QColor(255,0,0))
+        elif layer_types[i] == 'Green':
+    	    v.addAlphaModulatedLayer(d , name = layer_name, tintColor=QColor(0,255,0))
+        elif layer_types[i] == 'Blue':
+    	    v.addAlphaModulatedLayer(d , name = layer_name, tintColor=QColor(0,0,255))
+        else:
+            print layer_types[i]
+            raise KeyError("Invalid Layer Type!")
+
+    app.exec_()
+
+
+# adapted from https://github.com/ilastik/volumina/blob/master/examples/streamingViewer.py
 def streaming_n_layer(files, keys, labels = None, block_shape = [100,100,100]):
     from volumina.api import Viewer
     from volumina.pixelpipeline.datasources import LazyflowSource
@@ -84,7 +124,6 @@ def streaming_n_layer(files, keys, labels = None, block_shape = [100,100,100]):
     app = QApplication(sys.argv)
 
     v = Viewer()
-
 
     graph = Graph()
 
